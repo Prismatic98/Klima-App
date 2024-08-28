@@ -1,0 +1,72 @@
+.footer__wrapper {
+    position: relative;
+    height: 65px;
+}
+
+.footer {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0.5rem; /* Weniger Padding für schmaleren Footer */
+    background-color: #1f2937; /* Darker gray-800 */
+    color: white;
+    height: 100%;
+}
+
+.search-container {
+    position: absolute;
+    bottom: 6rem; /* Platzierung des Suchfelds über dem Footer */
+    z-index: 1000;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.search-container__input {
+    width: 90%;
+    padding: 0.75rem;
+    border: 2px solid #e2e8f0; /* Leicht hellgraue Border */
+    border-radius: 0.5rem; /* Runde Ecken */
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Leichter Schatten für modernes Design */
+    transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.search-container__input:focus {
+    border-color: #3b82f6; /* Blaue Border bei Fokus */
+    box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.15); /* Stärkerer Schatten bei Fokus */
+}
+
+.search-container__input:focus-visible {
+    outline: none;
+}
+
+.footer__icon {
+    font-size: 1.25rem; /* Kleinere Icons */
+}
+
+.footer__button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer__button {
+    background-color: #2563eb; /* Blaue Farbe */
+    width: 48px;  /* Kleinere Breite des Buttons */
+    height: 48px; /* Kleinere Höhe des Buttons */
+    border-radius: 50%; /* Runde Form */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.footer__button:hover {
+    background-color: #1d4ed8; /* Dunklerer Blauton bei Hover */
+    transform: scale(1.1); /* Leichtes Vergrößern bei Hover */
+}
+
+.footer__button--icon {
+    color: white;
+    font-size: 1.25rem; /* Kleinere Icons im Button */
+}

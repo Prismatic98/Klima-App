@@ -36,3 +36,18 @@
     transform: rotate(360deg);
   }
 }
+
+/* Layout für die gesamte App */
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* Der Hauptinhalt (z.B. die Karte), der den verbleibenden Platz ausfüllt */
+.content {
+  flex: 1;
+  position: relative;
+  overflow: hidden; /* Verhindert, dass Inhalte aus dem Container fließen */
+}
+
