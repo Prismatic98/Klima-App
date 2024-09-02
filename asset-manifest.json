@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/Klima-App/static/css/main.56604621.css",
-    "main.js": "/Klima-App/static/js/main.b9c74237.js",
+    "main.css": "/Klima-App/static/css/main.613ed214.css",
+    "main.js": "/Klima-App/static/js/main.47ce72cb.js",
     "static/js/453.fd0ed9fc.chunk.js": "/Klima-App/static/js/453.fd0ed9fc.chunk.js",
     "service-worker.js": "/Klima-App/service-worker.js",
     "index.html": "/Klima-App/index.html",
-    "main.56604621.css.map": "/Klima-App/static/css/main.56604621.css.map",
-    "main.b9c74237.js.map": "/Klima-App/static/js/main.b9c74237.js.map",
+    "main.613ed214.css.map": "/Klima-App/static/css/main.613ed214.css.map",
+    "main.47ce72cb.js.map": "/Klima-App/static/js/main.47ce72cb.js.map",
     "453.fd0ed9fc.chunk.js.map": "/Klima-App/static/js/453.fd0ed9fc.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.56604621.css",
-    "static/js/main.b9c74237.js"
+    "static/css/main.613ed214.css",
+    "static/js/main.47ce72cb.js"
   ]
 }
