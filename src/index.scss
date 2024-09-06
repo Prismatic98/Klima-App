@@ -1,6 +1,14 @@
+@import "styles/variables";
+
 @import "leaflet/dist/leaflet.css";
-@import "styles/Footer.css";
-@import "styles/Map.css";
+
+@import "styles/Header.scss";
+@import "styles/Footer.scss";
+@import "styles/Map.scss";
+@import "styles/Settings.scss";
+@import "styles/Modal.scss";
+@import "styles/WeatherModal.scss";
+@import "styles/Loading.scss";
 
 @tailwind base;
 @tailwind components;
@@ -18,4 +26,8 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.leaflet-control-attribution {
+  display: none;
 }

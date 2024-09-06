@@ -1,0 +1,42 @@
+.loading-screen {
+  background: linear-gradient(to right, #4facfe, #00f2fe);
+
+  .weather-loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    @apply space-x-6;
+
+    .icon-sun, .icon-cloud, .icon-snow {
+      animation: bounce 2s infinite ease-in-out;
+    }
+
+    .icon-sun {
+      color: #ffeb3b;
+    }
+    .icon-cloud {
+      color: #ffffff;
+    }
+    .icon-snow {
+      color: #b3e5fc;
+    }
+  }
+
+  @keyframes bounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+
+  .progress-info {
+    margin-top: 1.5rem;
+    text-align: center;
+
+    p {
+      font-size: 1rem;
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "home": {
+    "title": "Klima App Düsseldorf"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "routePreference": "Präferenz für Routen",
+    "coolRoute": "Kühle Route",
+    "fastRoute": "Schnelle Route",
+    "coolPlaceDistance": "Distanz zu kühlen Orten (in Metern)",
+    "meters": "Meter",
+    "interest": "Interesse",
+    "coolRoutes": "Kühle Wege",
+    "fastRoutes": "Schnelle Wege",
+    "language": "Sprache",
+    "german": "Deutsch",
+    "english": "English",
+    "notifications": "Push-Benachrichtigungen für kühle Orte",
+    "contextInfo": "Kontextbezogene Informationen",
+    "saveSettings": "Einstellungen speichern",
+    "saved": "Einstellungen gespeichert",
+    "savedMessage": "Deine Einstellungen wurden erfolgreich gespeichert."
+  },
+  "footer": {
+    "abort": "Abbrechen",
+    "start": "Start",
+    "planRoute": "Route planen",
+    "input_targetAddress_placeholder": "Zieladresse eingeben",
+    "input_startAddress_placeholder": "Startadresse eingeben"
+  }
+}

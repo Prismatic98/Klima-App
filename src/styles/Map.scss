@@ -1,0 +1,66 @@
+.map {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+
+    &__center-button {
+        position: absolute;
+        bottom: $spacing-md;
+        right: $spacing-md;
+        width: $icon-size-md;
+        height: $icon-size-md;
+        background-color: $primary-color;
+        border-radius: 50%;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        cursor: pointer;
+    }
+}
+
+.current-location-icon {
+    position: relative;
+}
+
+.location-dot {
+    width: $icon-size-xs;
+    height: $icon-size-xs;
+    background-color: #007bff;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.location-pulse {
+    width: $icon-size-xs;
+    height: $icon-size-xs;
+    background-color: rgba(0, 123, 255, 0.4);
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: pulse 2s ease-out infinite; /* Verlangsamt die Animation und fügt eine Pause ein */
+}
+
+@keyframes pulse {
+    0% {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 1;
+    }
+    30% {
+        transform: translate(-50%, -50%) scale(4);
+        opacity: 0;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(2);
+        opacity: 0;
+    }
+}

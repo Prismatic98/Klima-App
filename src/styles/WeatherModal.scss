@@ -1,0 +1,98 @@
+.weather-modal {
+  &__backdrop {
+    @apply fixed bg-gray-500 bg-opacity-75 transition-opacity;
+    inset: 65px 0;
+  }
+
+  &__container {
+    @apply fixed;
+    @apply flex items-center justify-center px-4 text-center;
+    inset: 82px 0;
+    z-index: 1;
+    overflow-y: auto;
+  }
+
+  &__wrapper {
+    @apply inline-block bg-white rounded-lg text-left overflow-hidden shadow-xl;
+    position: absolute;
+    top: 0;
+    left: 1rem;
+    right: 1rem;
+    z-index: 1;
+  }
+
+  &__header {
+    @apply bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4;
+    @apply text-center;
+  }
+
+  &__headline {
+    @apply text-lg leading-6 font-medium text-gray-900;
+  }
+
+  &__content {
+    @apply mt-4 space-y-4;
+  }
+
+  &__warning {
+    @apply flex items-start p-4 bg-gray-50 rounded-lg;
+  }
+
+  &__warning-content {
+    @apply ml-4;
+  }
+
+  &__warning-headline {
+    @apply text-lg font-medium text-gray-800;
+  }
+
+  &__warning-text {
+    @apply text-sm text-gray-600 mt-1;
+  }
+
+  &__footer {
+    @apply bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse;
+  }
+
+  &__button {
+    @apply w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm;
+  }
+
+  &__icon-container {
+    @apply flex-shrink-0 h-12 w-12 rounded-full flex items-center justify-center;
+  }
+
+  &__icon {
+    font-size: $icon-size-md;
+    border-radius: 50%;
+    padding: $spacing-sm / 2;
+  }
+
+  &__icon--rain {
+    @apply bg-blue-100 text-blue-600;
+  }
+
+  &__icon--heat {
+    @apply bg-red-100 text-red-600;
+  }
+
+  &__icon--wind {
+    @apply bg-gray-100 text-gray-600;
+  }
+
+  &__icon--fog {
+    @apply bg-gray-100 text-gray-600;
+  }
+
+  &__icon--flood {
+    @apply bg-indigo-100 text-indigo-600;
+  }
+
+  &__icon--storm {
+    @apply bg-yellow-100 text-yellow-600;
+  }
+
+  &__icon--frost {
+    @apply bg-blue-200 text-blue-800;
+  }
+}

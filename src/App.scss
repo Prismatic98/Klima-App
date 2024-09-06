@@ -1,3 +1,5 @@
+@import "styles/variables.scss";
+
 .App {
   text-align: center;
 }
@@ -49,5 +51,6 @@
   flex: 1;
   position: relative;
   overflow: hidden; /* Verhindert, dass Inhalte aus dem Container fließen */
+  margin: $toolbar-height 0;
 }
 

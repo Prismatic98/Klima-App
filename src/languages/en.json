@@ -1,0 +1,31 @@
+{
+  "home": {
+    "title": "Klima App Dusseldorf"
+  },
+  "settings": {
+    "title": "Settings",
+    "routePreference": "Route preference",
+    "coolRoute": "Cool route",
+    "fastRoute": "Fast route",
+    "coolPlaceDistance": "Distance to cool places (in meters)",
+    "meters": "Meters",
+    "interest": "Interest",
+    "coolRoutes": "Cool routes",
+    "fastRoutes": "Fast routes",
+    "language": "Language",
+    "german": "Deutsch",
+    "english": "English",
+    "notifications": "Push notifications for cool places",
+    "contextInfo": "Contextual information",
+    "saveSettings": "Save settings",
+    "saved": "Settings saved",
+    "savedMessage": "Your settings have been successfully saved."
+  },
+  "footer": {
+    "abort": "Abort",
+    "start": "Start",
+    "planRoute": "Plan route",
+    "input_targetAddress_placeholder": "Enter target address",
+    "input_startAddress_placeholder": "Enter start address"
+  }
+}

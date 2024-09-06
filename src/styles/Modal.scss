@@ -1,0 +1,86 @@
+.modal {
+}
+
+.modal {
+  &__backdrop {
+    @apply fixed bg-gray-500 bg-opacity-75 transition-opacity;
+    inset: 65px 0;
+  }
+
+  &__container {
+    @apply fixed overflow-y-hidden;
+    @apply flex items-center justify-center px-4 text-center;
+    inset: 65px 0;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  &__wrapper {
+    @apply inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full;
+  }
+
+  &__header {
+    @apply bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4;
+    @apply sm:flex sm:items-start;
+  }
+
+  &__icon-container {
+    @apply mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full sm:mx-0 sm:h-10 sm:w-10;
+  }
+
+  &__content {
+    @apply mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left;
+  }
+
+  &__headline {
+    @apply text-lg leading-6 font-medium text-gray-900;
+  }
+
+  &__text {
+    @apply mt-2 text-sm text-gray-500;
+  }
+
+  &__footer {
+    @apply bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse;
+  }
+
+  &__button {
+    @apply w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm;
+  }
+
+  &__icon {
+    @apply h-6 w-6;
+  }
+
+  &__icon--success {
+    @apply text-green-600;
+  }
+
+  &__icon--danger {
+    @apply text-red-600;
+  }
+
+  &__icon--information {
+    @apply text-blue-600;
+  }
+
+  &__icon--fail {
+    @apply text-yellow-600;
+  }
+
+  &__bg--success {
+    @apply bg-green-100;
+  }
+
+  &__bg--danger {
+    @apply bg-red-100;
+  }
+
+  &__bg--information {
+    @apply bg-blue-100;
+  }
+
+  &__bg--fail {
+    @apply bg-yellow-100;
+  }
+}
