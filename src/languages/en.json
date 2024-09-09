@@ -4,22 +4,27 @@
   },
   "settings": {
     "title": "Settings",
-    "routePreference": "Route preference",
+    "routePreference": "Route Preference",
+    "routePreferenceAria": "Setting for route preference",
     "coolRoute": "Cool route",
     "fastRoute": "Fast route",
-    "coolPlaceDistance": "Distance to cool places (in meters)",
+    "coolPlaceDistance": "Cool place distance (in meters)",
+    "coolPlaceDistanceAria": "Setting for cool place distance (in meters)",
     "meters": "Meters",
-    "interest": "Interest",
     "coolRoutes": "Cool routes",
     "fastRoutes": "Fast routes",
+    "coolAreasRoutes": "Cool routes across cool places",
     "language": "Language",
+    "languageAria": "Setting for language",
     "german": "Deutsch",
     "english": "English",
-    "notifications": "Push notifications for cool places",
-    "contextInfo": "Contextual information",
-    "saveSettings": "Save settings",
-    "saved": "Settings saved",
-    "savedMessage": "Your settings have been successfully saved."
+    "notifications": "Push Notifications",
+    "notificationsAria": "Enable push notifications",
+    "contextInfo": "Contextual Information",
+    "contextInfoAria": "Enable contextual information",
+    "voiceSelection": "Voice selection",
+    "voiceSelectionAria": "Setting for voice selection",
+    "saveSettings": "Save settings"
   },
   "footer": {
     "abort": "Abort",
@@ -27,5 +32,11 @@
     "planRoute": "Plan route",
     "input_targetAddress_placeholder": "Enter target address",
     "input_startAddress_placeholder": "Enter start address"
+  },
+  "weatherModal": {
+    "weatherAlerts": "Weather alerts"
+  },
+  "general": {
+    "close": "Close"
   }
 }

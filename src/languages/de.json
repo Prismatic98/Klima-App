@@ -4,22 +4,27 @@
   },
   "settings": {
     "title": "Einstellungen",
-    "routePreference": "Präferenz für Routen",
+    "routePreference": "Routenpräferenz",
+    "routePreferenceAria": "Einstellung der Routenpräferenz",
     "coolRoute": "Kühle Route",
     "fastRoute": "Schnelle Route",
     "coolPlaceDistance": "Distanz zu kühlen Orten (in Metern)",
+    "coolPlaceDistanceAria": "Einstellung für die Distanz zu kühlen Orten (in Metern)",
     "meters": "Meter",
-    "interest": "Interesse",
     "coolRoutes": "Kühle Wege",
     "fastRoutes": "Schnelle Wege",
+    "coolAreasRoutes": "Kühle Wege an kühlen Orten vorbei",
     "language": "Sprache",
+    "languageAria": "Einstellung der Sprache",
     "german": "Deutsch",
     "english": "English",
-    "notifications": "Push-Benachrichtigungen für kühle Orte",
+    "notifications": "Push-Benachrichtigungen",
+    "notificationsAria": "Push-Benachrichtigungen aktivieren",
     "contextInfo": "Kontextbezogene Informationen",
-    "saveSettings": "Einstellungen speichern",
-    "saved": "Einstellungen gespeichert",
-    "savedMessage": "Deine Einstellungen wurden erfolgreich gespeichert."
+    "contextInfoAria": "Kontextbezogene Informationen aktivieren",
+    "voiceSelection": "Stimmauswahl",
+    "voiceSelectionAria": "Einstellung der Stimmauswahl",
+    "saveSettings": "Einstellungen speichern"
   },
   "footer": {
     "abort": "Abbrechen",
@@ -27,5 +32,11 @@
     "planRoute": "Route planen",
     "input_targetAddress_placeholder": "Zieladresse eingeben",
     "input_startAddress_placeholder": "Startadresse eingeben"
+  },
+  "weatherModal": {
+    "weatherAlerts": "Wetterwarnungen"
+  },
+  "general": {
+    "close": "Schließen"
   }
 }

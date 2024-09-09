@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
     MdFoggy,
     MdLocalFireDepartment,
@@ -8,6 +9,7 @@ import {
 } from "react-icons/md";
 
 const WeatherModal = ({ isOpen, onClose, warnings }) => {
+    const { t, i18n } = useTranslation();
     if (!isOpen) return null;
 
     // Funktion, um das passende Icon und die Farben basierend auf dem Modus zu definieren
@@ -99,7 +101,7 @@ const WeatherModal = ({ isOpen, onClose, warnings }) => {
             <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
             <div className="weather-modal__wrapper">
                 <div className="weather-modal__header">
-                    <h3 className="weather-modal__headline">Wetterwarnungen</h3>
+                    <h3 className="weather-modal__headline">{t('weatherModal.weatherAlerts')}</h3>
                 </div>
                 <div className="weather-modal__content">
                     {warnings.map((warning, index) => (
@@ -120,7 +122,7 @@ const WeatherModal = ({ isOpen, onClose, warnings }) => {
                         className="weather-modal__button"
                         onClick={onClose}
                     >
-                        Schließen
+                        {t('general.close')}
                     </button>
                 </div>
             </div>

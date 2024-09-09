@@ -1,42 +1,37 @@
 import React, {useEffect, useState} from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSpeechSynthesis } from 'react-speech-kit';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import Modal from '../components/Modal';
 
 const Settings = () => {
     const { t, i18n } = useTranslation();
+    const { voices } = useSpeechSynthesis();
     const savedSettings = JSON.parse(localStorage.getItem('userSettings'));
 
     // States für die Einstellungen
-    const [routePreference, setRoutePreference] = useState(savedSettings?.routePreference ?? 5);
+    const [routePreference, setRoutePreference] = useState(savedSettings?.routePreference ?? 'ClimateBestPath');
     const [notificationsEnabled, setNotificationsEnabled] = useState(savedSettings?.notificationsEnabled ?? true);
-    const [coolPlaceDistance, setCoolPlaceDistance] = useState(savedSettings?.coolPlaceDistance ?? 500);
-    const [interest, setInterest] = useState(savedSettings?.interest ?? 'cool');
+    const [coolPlaceDistance, setCoolPlaceDistance] = useState(savedSettings?.coolPlaceDistance ?? 5);
     const [language, setLanguage] = useState(savedSettings?.language ?? (i18n.language || 'de'));
     const [contextInfoEnabled, setContextInfoEnabled] = useState(savedSettings?.contextInfoEnabled ?? true);
+    const [selectedVoice, setSelectedVoice] = useState(savedSettings?.selectedVoice ?? 0);
 
     // Hilfsfunktion zum Speichern der Einstellungen
     const saveSettings = (newSettings) => {
         const updatedSettings = {
-            routePreference,
             notificationsEnabled,
             coolPlaceDistance,
-            interest,
+            routePreference,
             language,
             contextInfoEnabled,
+            selectedVoice,
             ...newSettings
         };
         localStorage.setItem('userSettings', JSON.stringify(updatedSettings));
     };
 
     // Event-Handler mit direkter Speicherung im localStorage
-    const handleRoutePreferenceChange = (e) => {
-        const value = e.target.value;
-        setRoutePreference(value);
-        saveSettings({ routePreference: value });
-    };
-
     const handleNotificationToggle = () => {
         const newValue = !notificationsEnabled;
         setNotificationsEnabled(newValue);
@@ -49,10 +44,10 @@ const Settings = () => {
         saveSettings({ coolPlaceDistance: value });
     };
 
-    const handleInterestChange = (e) => {
+    const handleRoutePreferenceChange = (e) => {
         const value = e.target.value;
-        setInterest(value);
-        saveSettings({ interest: value });
+        setRoutePreference(value);
+        saveSettings({ routePreference: value });
     };
 
     const handleLanguageChange = (e) => {
@@ -68,50 +63,72 @@ const Settings = () => {
         saveSettings({ contextInfoEnabled: newValue });
     };
 
+    const handleSelectedVoiceChange = (e) => {
+        const value = e.target.value;
+        setSelectedVoice(value);
+        saveSettings({ selectedVoice: value });
+    };
+
     return (
         <div className="settings min-h-screen flex flex-col">
             <Header title={t('settings.title')} />
             <div className="content flex-grow p-6 space-y-8 bg-white rounded-lg max-w-lg mx-auto">
+
+                {/* Distanz zu kühlen Orten */}
                 <div className="setting-item slidecontainer">
-                    <label className="block text-gray-700 text-sm font-bold mb-2">{t('settings.routePreference')}:</label>
-                    <input type="range"
-                           min="0"
-                           max="10"
-                           value={routePreference}
-                           className="slider w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-blue-500"
-                           onChange={handleRoutePreferenceChange}/>
+                    <label
+                        className="block text-gray-700 text-sm font-bold mb-2"
+                        htmlFor="coolPlaceDistanceRange"
+                    >
+                        {t('settings.coolPlaceDistance')}:
+                    </label>
+                    <input
+                        type="range"
+                        id="coolPlaceDistanceRange"
+                        aria-label={t('settings.coolPlaceDistanceAria')}
+                        min="0"
+                        max="10"
+                        step="1"
+                        value={coolPlaceDistance}
+                        className="slider w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-blue-500"
+                        onChange={handleCoolPlaceDistanceChange}
+                    />
                     <p className="text-sm text-gray-600 mt-2">
-                        {routePreference < 5 ? t('settings.coolRoute') : t('settings.fastRoute')}
+                        {coolPlaceDistance} {t('settings.meters')}
                     </p>
                 </div>
 
-                <div className="setting-item slidecontainer">
-                    <label className="block text-gray-700 text-sm font-bold mb-2">{t('settings.coolPlaceDistance')}:</label>
-                    <input type="range"
-                           min="0"
-                           max="500"
-                           step="50"
-                           value={coolPlaceDistance}
-                           className="slider w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-blue-500"
-                           onChange={handleCoolPlaceDistanceChange}/>
-                    <p className="text-sm text-gray-600 mt-2">{coolPlaceDistance} {t('settings.meters')}</p>
-                </div>
-
+                {/* Routenpräferenz */}
                 <div className="setting-item">
-                    <label className="block text-gray-700 text-sm font-bold mb-2">{t('settings.interest')}:</label>
+                    <label
+                        className="block text-gray-700 text-sm font-bold mb-2"
+                        htmlFor="routePreferenceSelect"
+                    >
+                        {t('settings.routePreference')}:
+                    </label>
                     <select
-                        value={interest}
-                        onChange={handleInterestChange}
+                        id="routePreferenceSelect"
+                        aria-label={t('settings.routePreferenceAria')}
+                        value={routePreference}
+                        onChange={handleRoutePreferenceChange}
                         className="block w-full mt-1 bg-white border border-gray-300 rounded-md shadow-sm focus:ring-blue-600 focus:border-blue-600"
                     >
-                        <option value="cool">{t('settings.coolRoutes')}</option>
-                        <option value="fast">{t('settings.fastRoutes')}</option>
+                        <option value="ClimateBestPath">{t('settings.coolRoutes')}</option>
+                        <option value="ShortestPath">{t('settings.fastRoutes')}</option>
                     </select>
                 </div>
 
+                {/* Spracheinstellung */}
                 <div className="setting-item">
-                    <label className="block text-gray-700 text-sm font-bold mb-2">{t('settings.language')}:</label>
+                    <label
+                        className="block text-gray-700 text-sm font-bold mb-2"
+                        htmlFor="languageSelect"
+                    >
+                        {t('settings.language')}:
+                    </label>
                     <select
+                        id="languageSelect"
+                        aria-label={t('settings.languageAria')}
                         value={language}
                         onChange={handleLanguageChange}
                         className="block w-full mt-1 bg-white border border-gray-300 rounded-md shadow-sm focus:ring-blue-600 focus:border-blue-600"
@@ -121,10 +138,18 @@ const Settings = () => {
                     </select>
                 </div>
 
+                {/* Push-Benachrichtigungen */}
                 <div className="setting-item flex items-center justify-between">
-                    <label className="max-w-80 block text-gray-700 text-sm font-bold">{t('settings.notifications')}:</label>
+                    <label
+                        className="max-w-80 block text-gray-700 text-sm font-bold"
+                        htmlFor="notificationsToggle"
+                    >
+                        {t('settings.notifications')}:
+                    </label>
                     <label className="settings-item switch">
                         <input
+                            id="notificationsToggle"
+                            aria-label={t('settings.notificationsAria')}
                             type="checkbox"
                             checked={notificationsEnabled}
                             onChange={handleNotificationToggle}
@@ -133,10 +158,18 @@ const Settings = () => {
                     </label>
                 </div>
 
+                {/* Kontextbezogene Informationen */}
                 <div className="setting-item flex items-center justify-between">
-                    <label className="max-w-80 block text-gray-700 text-sm font-bold">{t('settings.contextInfo')}:</label>
+                    <label
+                        className="max-w-80 block text-gray-700 text-sm font-bold"
+                        htmlFor="contextInfoToggle"
+                    >
+                        {t('settings.contextInfo')}:
+                    </label>
                     <label className="settings-item switch">
                         <input
+                            id="contextInfoToggle"
+                            aria-label={t('settings.contextInfoAria')}
                             type="checkbox"
                             checked={contextInfoEnabled}
                             onChange={handleContextInfoToggle}
@@ -144,9 +177,32 @@ const Settings = () => {
                         <span className="toggle round"></span>
                     </label>
                 </div>
+
+                <div className="setting-item">
+                    <label
+                        className="block text-gray-700 text-sm font-bold mb-2"
+                        htmlFor="voiceSelect"
+                    >
+                        {t('settings.voiceSelection')}:
+                    </label>
+                    <select
+                        id="voiceSelect"
+                        aria-label={t('settings.voiceSelectionAria')}
+                        value={selectedVoice}
+                        onChange={handleSelectedVoiceChange}
+                        className="block w-full mt-1 bg-white border border-gray-300 rounded-md shadow-sm focus:ring-blue-600 focus:border-blue-600"
+                    >
+                        {voices.map((voice, index) => (
+                            <option key={index} value={index}>
+                                {voice.name} ({voice.lang})
+                            </option>
+                        ))}
+                    </select>
+                </div>
             </div>
-            <Footer />
+            <Footer/>
         </div>
+
     );
 };
 

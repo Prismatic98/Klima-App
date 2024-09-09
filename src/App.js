@@ -6,7 +6,6 @@ import Home from './screens/Home.jsx';
 import Settings from './screens/Settings.jsx';
 import './App.scss';
 import Loading from './components/Loading';
-import Header from "./components/Header";
 
 const App = () => {
     const savedSettings = JSON.parse(localStorage.getItem('userSettings'));
@@ -62,7 +61,7 @@ const App = () => {
     return (
         <Router basename="/Klima-App">
             <Routes>
-                <Route path="/" element={<Home warnings={warnings}/>} />
+                <Route path="/" element={<Home warnings={warnings} />} />
                 <Route path="/settings" element={<Settings />} />
             </Routes>
         </Router>

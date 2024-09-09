@@ -1,10 +1,26 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { MapContainer, TileLayer, Polyline, Marker, Popup, useMap } from 'react-leaflet';
+import React, {useEffect, useState, useRef} from 'react';
+import {MapContainer, TileLayer, Polyline, Marker, Popup, useMap, Polygon} from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import { MdMyLocation } from 'react-icons/md';
+import {MdMyLocation} from 'react-icons/md';
 
-const Map = ({ route }) => {
+// Standard Leaflet Icons
+const startIcon = new L.Icon({
+    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+});
+const endIcon = new L.Icon({
+    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+});
+
+const Map = ({route, routeStartAddress, routeEndAddress}) => {
     const [currentPosition, setCurrentPosition] = useState(null);
     const [heading, setHeading] = useState(0); // Blickrichtung
     const mapRef = useRef(); // Referenz zur Karte
@@ -28,10 +44,8 @@ const Map = ({ route }) => {
         const weightFactor = 0.7; // Faktor, der den Einfluss der neueren Werte gewichtet
         const lastHeading = headingHistory.current.length ? headingHistory.current[headingHistory.current.length - 1] : newHeading;
 
-        // Berechne die Differenz zwischen dem letzten und dem neuen Heading
         let delta = newHeading - lastHeading;
 
-        // Wenn die Differenz größer als 180° ist, korrigiere sie für den Übergang über 0°
         if (delta > 180) {
             delta -= 360;
         } else if (delta < -180) {
@@ -46,7 +60,6 @@ const Map = ({ route }) => {
             headingHistory.current.shift(); // Entferne den ältesten Wert
         }
 
-        // Gewichteter gleitender Durchschnitt
         let weightedSum = 0;
         let weightSum = 0;
 
@@ -58,7 +71,6 @@ const Map = ({ route }) => {
 
         let smoothedHeading = weightedSum / weightSum;
 
-        // Normalisiere den smoothedHeading wieder in den Bereich von 0° bis 360°
         if (smoothedHeading < 0) {
             smoothedHeading += 360;
         } else if (smoothedHeading >= 360) {
@@ -68,15 +80,12 @@ const Map = ({ route }) => {
         return smoothedHeading;
     };
 
-
     useEffect(() => {
-        // Geolocation API zur Standortverfolgung
         if (navigator.geolocation) {
             const watchId = navigator.geolocation.watchPosition(
                 (position) => {
-                    const { latitude, longitude } = position.coords;
+                    const {latitude, longitude} = position.coords;
                     setCurrentPosition([latitude, longitude]);
-                    console.log(currentPosition);
                     if (!isMapCentered.current && mapRef.current && mapRef.current.setView) {
                         mapRef.current.setView([latitude, longitude], mapRef.current.getZoom());
                         isMapCentered.current = true; // Markiere die Karte als zentriert
@@ -92,7 +101,6 @@ const Map = ({ route }) => {
                 }
             );
 
-            // Aufräumen bei unmounten
             return () => {
                 if (watchId) {
                     navigator.geolocation.clearWatch(watchId);
@@ -104,7 +112,6 @@ const Map = ({ route }) => {
     }, []);
 
     useEffect(() => {
-        // DeviceOrientationEvent zur Bestimmung der Blickrichtung
         const handleOrientation = (event) => {
             if (event.absolute && event.alpha !== null) {
                 let compassHeading = event.alpha;
@@ -113,7 +120,6 @@ const Map = ({ route }) => {
                 }
                 let invertedHeading = 360 - compassHeading;
 
-                // Glättung des Kompasswerts
                 const smoothedHeading = smoothCompassValue(invertedHeading) - 45;
                 setHeading(smoothedHeading);
                 setUseCompass(true); // Compass-Daten erfolgreich verwendet
@@ -122,42 +128,46 @@ const Map = ({ route }) => {
 
         window.addEventListener('deviceorientationabsolute', handleOrientation, true);
 
-        // Fallback für Browser, die 'deviceorientationabsolute' nicht unterstützen
         window.addEventListener('deviceorientation', handleOrientation, true);
 
-        // Aufräumen bei unmounten
         return () => {
             window.removeEventListener('deviceorientationabsolute', handleOrientation);
             window.removeEventListener('deviceorientation', handleOrientation);
         };
     }, []);
 
-    // Icon für den aktuellen Standort
     const currentLocationIcon = new L.DivIcon({
         html: useCompass ? `<div style="transform: rotate(${heading}deg);">${currentLocationIconSVG}</div>` : fallbackLocationIconSVG,
         iconSize: [40, 40],
         className: 'current-location-icon',
     });
 
-    // Funktion zum Zentrieren der Karte auf den aktuellen Standort
     const CenterButton = () => {
-        const map = useMap(); // Zugriff auf die Map-Instanz
+        const map = useMap();
 
         const handleCenterClick = () => {
             if (currentPosition) {
-                map.setView(currentPosition, map.getZoom()); // Zentriert die Karte auf den aktuellen Standort
+                map.setView(currentPosition, map.getZoom());
             }
         };
 
         return (
-            <button
-                onClick={handleCenterClick}
-                className="map__center-button"
-            >
-                <MdMyLocation size={24} color="#fff" /> {/* Google Maps-ähnliches Icon */}
+            <button onClick={handleCenterClick} className="map__center-button">
+                <MdMyLocation size={24} color="#fff"/>
             </button>
         );
     };
+
+    useEffect(() => {
+        if (route.length > 0 && mapRef.current) {
+            const bounds = new L.LatLngBounds(
+                route.map(segment => {
+                    return segment.map(point => [point.lat, point.lng])
+                })
+            );
+            mapRef.current.fitBounds(bounds, {padding: [50, 50]});  // Füge Padding hinzu, damit die Route nicht zu nah am Rand ist
+        }
+    }, [route]);
 
     return (
         <MapContainer
@@ -170,16 +180,58 @@ const Map = ({ route }) => {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             />
+
+            {/* Schleife durch die Segmente in der Route */}
+            {route.length > 0 && route.map((segment, segmentIndex) => (
+                <React.Fragment key={segmentIndex}>
+                    {/* Zeichne die Linie für jedes Segment */}
+                    {segment.length > 0 && (
+                        <Polyline
+                            positions={segment.map(point => [point.lat, point.lng])}
+                            color={segment[0].color}  // Verwende die Farbe des ersten Punktes im Segment
+                            weight={6}
+                            opacity={0.9}
+                            lineCap="round"
+                        />
+                    )}
+
+                    {/* Zeichne das Polygon, wenn bounds existieren */}
+                    {segment[0].bounds && (
+                        <Polygon
+                            positions={segment[0].bounds.map(point => [point.y, point.x])}
+                            color={segment[0].color}
+                            fillOpacity={0.3}
+                        />
+                    )}
+                </React.Fragment>
+            ))}
+
+            {/* Markierungen für Start- und Endpunkt */}
             {route.length > 0 && (
-                <Polyline positions={route} color="blue" />
+                <>
+                    {/* Startpunkt */}
+                    <Marker position={[route[0][0].lat, route[0][0].lng]} icon={startIcon}>
+                        <Popup>{routeStartAddress}</Popup>
+                    </Marker>
+
+                    {/* Endpunkt */}
+                    <Marker position={[route[route.length - 1][route[route.length - 1].length - 1].lat, route[route.length - 1][route[route.length - 1].length - 1].lng]} icon={endIcon}>
+                        <Popup>{routeEndAddress}</Popup>
+                    </Marker>
+                </>
             )}
+
+            {/* Marker für die aktuelle Position */}
             {currentPosition && (
                 <Marker position={currentPosition} icon={currentLocationIcon}>
                     <Popup>Your location</Popup>
                 </Marker>
             )}
+
+            {/* Button zum Zentrieren der Karte auf die aktuelle Position */}
             <CenterButton />
         </MapContainer>
+
     );
 };
 

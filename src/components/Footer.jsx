@@ -10,15 +10,14 @@ import {
     MdOutlineAcUnit
 } from 'react-icons/md';
 import { useLocation, useNavigate } from 'react-router-dom';
+import {getPageText} from "../scripts/main";
 
-const Footer = ({ setRoute }) => {  // setRoute wird als Prop empfangen
+const Footer = ({ setRoute, routeStartAddress, setRouteStartAddress, routeEndAddress, setRouteEndAddress }) => {  // setRoute wird als Prop empfangen
     const { t } = useTranslation();
     const savedSettings = JSON.parse(localStorage.getItem('userSettings'));
     const [isSearchActive, setIsSearchActive] = useState(false);
     const [showButtons, setShowButtons] = useState(false);
     const [showOverlay, setShowOverlay] = useState(false);
-    const [startAddress, setStartAddress] = useState('');
-    const [endAddress, setEndAddress] = useState('');
     const [allAddresses, setAllAddresses] = useState([]);
     const [startAddressSuggestions, setStartAddressSuggestions] = useState([]);
     const [endAddressSuggestions, setEndAddressSuggestions] = useState([]);
@@ -28,7 +27,7 @@ const Footer = ({ setRoute }) => {  // setRoute wird als Prop empfangen
 
     useEffect(() => {
         const fetchAddressSuggestions = () => {
-            const preparedQueryUrl = '/EntityServerAPI/entities';
+            const preparedQueryUrl = 'http://localhost:8080/EntityServerAPI/entities';
 
             fetch(preparedQueryUrl, {
                 'bypass-tunnel-reminder': '*'
@@ -98,14 +97,30 @@ const Footer = ({ setRoute }) => {  // setRoute wird als Prop empfangen
 
     // Funktion zur Ausführung der Anfrage bei Klick auf "Los"
     const getRoute = () => {
-        const preparedQueryUrl = '/ContextServerAPI/predefined';
+        const preparedQueryUrl = 'http://localhost:8080/ContextServerAPI/predefined';
 
         const params = new URLSearchParams();
+
+        const routeLogic = routePreference;
+
         params.append('application', 'DerendorfPlan');
-        params.append('situation', 'ClimateBestPath');
-        params.append('query', 'ClimateBestPath');
-        params.append('part_StartingBuilding', JSON.stringify({ name: startAddress }));
-        params.append('part_EndingBuilding', JSON.stringify({ name: endAddress }));
+        params.append('situation', routeLogic);
+        params.append('query', routeLogic);
+        params.append('part_StartingBuilding', JSON.stringify({ name: routeStartAddress }));
+        params.append('part_EndingBuilding', JSON.stringify({ name: routeEndAddress }));
+
+        if (routeLogic === 'ClimateBestPathNearCoolAreas') {
+            params.append('part_CoolPlaces', '');
+            params.append('param_routeLengthWeight', '30');
+            params.append('param_bioclimateWeigth', '50');
+            params.append('param_coolPlaceMinDistanceWeight', '10');
+            params.append('param_coolPlaceAvgDistanceWeight', '10');
+            params.append('param_coolPlaceMaxDistanceWeight', '10');
+            params.append('param_coolPlaceMaxDistance', savedSettings?.coolPlaceDistance ?? '5');
+            params.append('param_maxDerivationRouteLength', '1.2');
+            params.append('param_maxDerivationBioclimate', '');
+        }
+
         params.append('param_breakAfterMS', '1000');
         params.append('param_resultSize', '1');
         params.append('param_maxOptSteps', '300');
@@ -118,29 +133,91 @@ const Footer = ({ setRoute }) => {  // setRoute wird als Prop empfangen
             body: params.toString()
         };
 
+        // Funktion zur Bestimmung der Farbe basierend auf der bioclimateSituation
+        const getColorBasedOnBioclimate = (bioclimateSituation) => {
+            if (bioclimateSituation >= 9) {
+                return '#d73027'; // Rot (unangenehm)
+            } else if (bioclimateSituation >= 7) {
+                return '#fdae61'; // Orange (weniger angenehm)
+            } else if (bioclimateSituation >= 5) {
+                return '#fee08b'; // Gelb (neutral)
+            } else if (bioclimateSituation >= 3) {
+                return '#66bd63'; // Hellgrün (angenehm)
+            } else {
+                return '#1a9850'; // Grün (sehr angenehm)
+            }
+        };
+
+        const getCoordinates = (entity) => {
+            const coordinates = [];
+            if (entity) {
+                const fromBioclimateSituation = entity.attributes.bioclimatesituation;
+                const fromColor = getColorBasedOnBioclimate(fromBioclimateSituation);
+
+                // Verarbeite fromEntity basierend auf dem PolygonType
+                if (entity.attributes.position.PolygonType === 'Line') {
+                    const fromPoints = entity.attributes.position.PolygonPoints;
+                    fromPoints.forEach((point) => {
+                        coordinates.push({
+                            lat: point.y,
+                            lng: point.x,
+                            bioclimateSituation: fromBioclimateSituation,
+                            color: fromColor
+                        });
+                    });
+                } else if (entity.attributes.position.PolygonType === 'Polygone') {
+                    const fromX = entity.attributes.position.xCentral;
+                    const fromY = entity.attributes.position.yCentral;
+                    const fromBounds = entity.attributes.position.PolygonPoints;
+
+                    coordinates.push({
+                        lat: fromY,
+                        lng: fromX,
+                        bioclimateSituation: fromBioclimateSituation,
+                        color: fromColor,
+                        bounds: fromBounds
+                    });
+                } else {
+                    const x = entity.attributes.position.xCentral;
+                    const y = entity.attributes.position.yCentral;
+
+                    coordinates.push({
+                        lat: y,
+                        lng: x,
+                        bioclimateSituation: fromBioclimateSituation,
+                        color: fromColor
+                    });
+                }
+            }
+            return coordinates;
+        }
+
         fetch(preparedQueryUrl, options)
             .then(response => response.json())
             .then(data => {
                 if (data.result && data.result.length > 0) {
-                    const coordinates = [];
+                    const bigRoute = [];
+                    // Schleife durch die Schritte
                     data.result[0].forEach(step => {
-                        if (step.toEntity) {
-                            if (step.fromEntity.attributes.polygonType === 'Line') {
-                                const points = step.toEntity.attributes.position.PolygonPoints;
-                                points.forEach(point => {
-                                    coordinates.push([point.y, point.x]);
-                                });
-                            } else {
-                                const x = step.toEntity.attributes.position.xCentral;
-                                const y = step.toEntity.attributes.position.yCentral;
-                                coordinates.push([y, x]);
-                            }
-                        }
+                        let coordinates = getCoordinates(step.fromEntity);
+                        if (coordinates.length > 0)
+                            bigRoute.push(coordinates);
+                        coordinates = getCoordinates(step.toEntity);
+                        if (coordinates.length > 0)
+                            bigRoute.push(coordinates);
                     });
-                    setRoute(coordinates);  // Route wird gesetzt
+
+                    bigRoute.pop();
+
+                    setRoute(bigRoute);     // Update React Property
                     goToHome();
-                    closeOverlay();  // Overlay wird geschlossen
+                    closeOverlay();
                 }
+
+
+
+
+
             })
             .catch(error => {
                 console.error(error);
@@ -188,9 +265,9 @@ const Footer = ({ setRoute }) => {  // setRoute wird als Prop empfangen
                             type="text"
                             placeholder={t('footer.input_startAddress_placeholder') + "..."}
                             className="search-container__input"
-                            value={startAddress}
+                            value={routeStartAddress}
                             onChange={(e) => {
-                                setStartAddress(e.target.value);
+                                setRouteStartAddress(e.target.value);
                                 filterStartAddressSuggestions(e.target.value);
                             }}
                         />
@@ -200,7 +277,7 @@ const Footer = ({ setRoute }) => {  // setRoute wird als Prop empfangen
                                     <li
                                         key={index}
                                         onClick={() => {
-                                            setStartAddress(suggestion);
+                                            setRouteStartAddress(suggestion);
                                             setStartAddressSuggestions([]);
                                         }}
                                     >
@@ -214,9 +291,9 @@ const Footer = ({ setRoute }) => {  // setRoute wird als Prop empfangen
                             type="text"
                             placeholder={t('footer.input_targetAddress_placeholder') + "..."}
                             className="search-container__input"
-                            value={endAddress}
+                            value={routeEndAddress}
                             onChange={(e) => {
-                                setEndAddress(e.target.value);
+                                setRouteEndAddress(e.target.value);
                                 filterEndAddressSuggestions(e.target.value);
                             }}
                         />
@@ -226,7 +303,7 @@ const Footer = ({ setRoute }) => {  // setRoute wird als Prop empfangen
                                     <li
                                         key={index}
                                         onClick={() => {
-                                            setEndAddress(suggestion);
+                                            setRouteEndAddress(suggestion);
                                             setEndAddressSuggestions([]);
                                         }}
                                     >
@@ -236,17 +313,18 @@ const Footer = ({ setRoute }) => {  // setRoute wird als Prop empfangen
                             </ul>
                         )}
 
-                        <div className="slidecontainer">
+                        <div className="setting-item">
                             <label className="block text-gray-700 text-sm font-bold mb-2">{t('settings.routePreference')}:</label>
-                            <input type="range"
-                                   min="0"
-                                   max="10"
-                                   value={routePreference}
-                                   className="slider w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-blue-500"
-                                   onChange={handleRoutePreferenceChange}/>
-                            <p className="text-sm text-gray-600 mt-2">
-                                {routePreference < 5 ? t('settings.coolRoute') : t('settings.fastRoute')}
-                            </p>
+                            <select
+                                value={routePreference}
+                                onChange={handleRoutePreferenceChange}
+                                className="block w-full mt-1 bg-white border border-gray-300 rounded-md shadow-sm focus:ring-blue-600 focus:border-blue-600"
+                            >
+                                <option value="ClimateBestPath">{t('settings.coolRoutes')}</option>
+                                <option value="ShortestPath">{t('settings.fastRoutes')}</option>
+                                <option value="ClimateBestPathNearCoolAreas">{t('settings.coolAreasRoutes')}</option>
+
+                            </select>
                         </div>
 
                         <div className="overlay__button-container">
