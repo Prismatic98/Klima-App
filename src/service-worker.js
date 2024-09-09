@@ -69,3 +69,16 @@ self.addEventListener('message', (event) => {
   }
 });
 
+self.addEventListener('push', (event) => {
+    const data = event.data.json();
+    const options = {
+        body: data.body,
+        icon: data.icon || '%PUBLIC_URL%/android/android-launchericon-512-512.png',  // Setze ein Icon
+    };
+
+    event.waitUntil(
+        self.registration.showNotification(data.title, options)
+    );
+});
+
+

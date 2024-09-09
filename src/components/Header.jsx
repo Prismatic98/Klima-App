@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import {MdBugReport, MdOutlineArrowBack, MdRecordVoiceOver, MdStopCircle} from 'react-icons/md'; // Importiere das Abbrechen-Icon
+import { MdBugReport, MdOutlineArrowBack, MdRecordVoiceOver, MdStopCircle } from 'react-icons/md';
 import { useSpeechSynthesis } from 'react-speech-kit';
 import { getPageText } from "../scripts/main";
 
@@ -21,7 +21,6 @@ const Header = ({ title }) => {
         const savedSettings = JSON.parse(localStorage.getItem('userSettings'));
         const voice = loadedVoices[savedSettings?.selectedVoice ?? 0]; // Wähle die Stimme basierend auf gespeicherten Einstellungen
         if (!speaking) {
-            console.log(voices)
             speak({
                 text: getPageText(),
                 voice: voice,
@@ -34,6 +33,25 @@ const Header = ({ title }) => {
     const handleCancel = () => {
         cancel(); // Vorlesen abbrechen
         setIsSpeaking(false); // Icon zurücksetzen
+    };
+
+    // Funktion zum Anzeigen der Notification
+    const handleTestNotification = async () => {
+        const registration = await navigator.serviceWorker.ready;
+        if (Notification.permission === "granted") {
+            registration.showNotification("Test-Benachrichtigung", {
+                body: "Das ist eine Testbenachrichtigung!",
+            });
+        } else if (Notification.permission !== "denied") {
+            const permission = await Notification.requestPermission();
+            if (permission === "granted") {
+                registration.showNotification("Test-Benachrichtigung", {
+                    body: "Das ist eine Testbenachrichtigung!",
+                });
+            }
+        } else {
+            alert("Benachrichtigungen sind blockiert.");
+        }
     };
 
 
@@ -64,14 +82,22 @@ const Header = ({ title }) => {
             {/* Wechsle zwischen dem Vorlesen-Icon und dem Abbrechen-Icon */}
             <button
                 onClick={isSpeaking ? handleCancel : handleSpeak}
-                className="absolute right-4 top-1/2 transform -translate-y-1/2"
+                className="absolute right-16 top-1/2 transform -translate-y-1/2"
                 aria-label={isSpeaking ? "Abbrechen" : "Vorlesen"}
             >
                 {isSpeaking ? (
-                    <MdStopCircle  className="text-white text-xl" /> // Zeige das Abbrechen-Icon an
+                    <MdStopCircle className="text-white text-xl" /> // Zeige das Abbrechen-Icon an
                 ) : (
                     <MdRecordVoiceOver className="text-white text-xl" /> // Zeige das Vorlesen-Icon an
                 )}
+            </button>
+            {/* Test-Button für die Notification */}
+            <button
+                onClick={handleTestNotification}
+                className="absolute right-4 top-1/2 transform -translate-y-1/2"
+                aria-label="Test-Benachrichtigung"
+            >
+                <MdBugReport className="text-white text-xl" />
             </button>
         </header>
     );
