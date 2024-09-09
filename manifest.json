@@ -1,6 +1,7 @@
 {
   "short_name": "Klima App",
   "name": "Klima App Düsseldorf",
+  "homepage": "https://klima-app-duesseldorf.web.app",
   "icons": [
     {
       "src": "android/android-launchericon-512-512.png",
