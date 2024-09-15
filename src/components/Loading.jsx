@@ -1,17 +1,17 @@
 import React from 'react';
-import { MdWbSunny, MdCloud, MdAcUnit } from 'react-icons/md'; // Sonne, Wolke, Schneeflocke Icons aus Material Design
+import '../styles/Loading.scss';
+import logo from '../logo_1.webp'; // Importiere das Logo, passe den Pfad entsprechend an
 
-const Loading = () => {
+const Loading = ({ message }) => {
     return (
-        <div className="loading-screen flex flex-col justify-center items-center h-screen bg-gradient-to-r from-blue-300 via-blue-500 to-blue-700 text-white">
-            {/* Wetter-Symbol-Animation */}
-            <div className="weather-loader flex justify-center items-center space-x-6">
-                <MdWbSunny className="icon-sun animate-bounce" size={50} />
-                <MdCloud className="icon-cloud animate-bounce" size={50} />
-                <MdAcUnit className="icon-snow animate-bounce" size={50} />
+        <div className="loading-screen flex flex-col justify-center items-center h-screen">
+            {/* Logo-Animation */}
+            <div className="logo-container">
+                <img src={logo} alt="Loading Logo" className="logo" />
+                <div className="loading-pulse"></div>
             </div>
             <div className="progress-info mt-6 text-center">
-                <p className="text-sm">Klima-Daten werden abgerufen...</p>
+                <p className="text-sm">{message}</p>
             </div>
         </div>
     );

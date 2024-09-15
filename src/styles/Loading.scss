@@ -1,42 +1,67 @@
+@import "variables";
+
 .loading-screen {
-  background: linear-gradient(to right, #4facfe, #00f2fe);
+  overflow: hidden;
 
-  .weather-loader {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    @apply space-x-6;
+  .logo-container {
+    position: relative;
+    animation: floating 1.5s ease-out infinite;
 
-    .icon-sun, .icon-cloud, .icon-snow {
-      animation: bounce 2s infinite ease-in-out;
+    .logo {
+      width: 260px;
+      height: 260px;
+      z-index: 1;
     }
 
-    .icon-sun {
-      color: #ffeb3b;
-    }
-    .icon-cloud {
-      color: #ffffff;
-    }
-    .icon-snow {
-      color: #b3e5fc;
-    }
-  }
-
-  @keyframes bounce {
-    0%, 100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-20px);
+    .loading-pulse {
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      background-color: $secondary-color;
+      animation: pulse1 3.5s infinite ease-out;
+      z-index: -1;
     }
   }
 
   .progress-info {
-    margin-top: 1.5rem;
+    margin-top: $spacing-md;
     text-align: center;
 
     p {
-      font-size: 1rem;
+      color: $secondary-color;
+      font-size: $font-size-md;
+      font-weight: bold;
     }
+  }
+}
+
+@keyframes pulse1 {
+  0% {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(9);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes floating {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+  100% {
+    transform: translateY(0);
   }
 }

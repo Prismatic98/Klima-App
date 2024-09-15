@@ -17,12 +17,14 @@
 
     &__icon {
         font-size: $icon-size-sm;
+
+        &--big {
+            font-size: $icon-size-md;
+        }
     }
 
     &__button {
         background-color: $primary-color;
-        width: 48px;
-        height: 48px;
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -35,6 +37,8 @@
         }
 
         &--big {
+            width: $icon-size-xxl;
+            height: $icon-size-xxl;
             outline: 3px solid $secondary-color;
         }
 
@@ -52,6 +56,8 @@
 .half-circle-button {
     position: absolute;
     background-color: $primary-color;
+    width: $icon-size-xl;
+    height: $icon-size-xl;
     border-radius: 50%;
     padding: $spacing-sm;
     cursor: pointer;
@@ -86,104 +92,5 @@
         top: 0;
         left: 0;
         transition: opacity 0.3s ease;
-    }
-}
-
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: $overlay-bg;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    z-index: 1;
-
-    &__content {
-        background-color: white;
-        padding: $spacing-md;
-        border-radius: $border-radius-md;
-        width: 90%;
-        max-width: 500px;
-        display: flex;
-        flex-direction: column;
-        gap: $spacing-md;
-        margin-top: 85px;
-
-        input {
-            padding: $spacing-sm;
-            font-size: $font-size-sm;
-            border: 1px solid #ccc;
-            border-radius: $border-radius-sm;
-        }
-
-        button {
-            padding: $spacing-sm $spacing-md;
-            color: white;
-            border: none;
-            border-radius: $border-radius-sm;
-            cursor: pointer;
-            font-size: $font-size-sm;
-            text-align: center;
-            width: 100%;
-
-            &:hover {
-                background-color: #0056b3;
-            }
-        }
-    }
-
-    &__button-container {
-        display: flex;
-        gap: $spacing-sm;
-    }
-}
-
-.search {
-    &-container {
-        position: absolute;
-        bottom: 6rem;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-
-        &__input {
-            width: 100%;
-            padding: 0.75rem;
-            border: 2px solid #e2e8f0;
-            border-radius: 0.5rem;
-            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-            transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-
-            &:focus {
-                border-color: #3b82f6;
-                box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.15);
-            }
-
-            &:focus-visible {
-                outline: none;
-            }
-        }
-    }
-
-    &-suggestions {
-        list-style-type: none;
-        padding: 0;
-        margin: 0;
-        background-color: white;
-        border: 1px solid #ccc;
-        max-height: 150px;
-        overflow-y: auto;
-
-        &__item {
-            padding: $spacing-sm;
-            cursor: pointer;
-
-            &:hover {
-                background-color: #f0f0f0;
-            }
-        }
     }
 }

@@ -3,6 +3,8 @@ import {MapContainer, TileLayer, Polyline, Marker, Popup, useMap, Polygon} from 
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import {MdMyLocation} from 'react-icons/md';
+import {sendNotification, calculateDistance, canSendNotification} from "../scripts/main";
+import LocationModal from "./LocationModal";
 
 // Standard Leaflet Icons
 const startIcon = new L.Icon({
@@ -27,6 +29,8 @@ const Map = ({route, routeStartAddress, routeEndAddress}) => {
     const isMapCentered = useRef(false); // Variable, um den Zustand der Zentrierung zu verfolgen
     const headingHistory = useRef([]); // Array zur Speicherung der letzten Kompasswerte
     const [useCompass, setUseCompass] = useState(false); // Zustand für die Nutzung der Compass-Daten
+    const [locationModalIsOpen, setLocationModalIsOpen] = useState(false);
+    const [locationNear, setLocationNear] = useState(null);
 
     const currentLocationIconSVG = `
     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="#007bff" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-navigation">
@@ -90,6 +94,31 @@ const Map = ({route, routeStartAddress, routeEndAddress}) => {
                         mapRef.current.setView([latitude, longitude], mapRef.current.getZoom());
                         isMapCentered.current = true; // Markiere die Karte als zentriert
                     }
+
+                    const targetLat = 51.236123; // Beispielkoordinaten
+                    const targetLng = 6.7940113; // Beispielkoordinaten
+                    const targetName = 'Kühler Platz im Stadtpark'
+
+                    const distance = calculateDistance(latitude, longitude, targetLat, targetLng);
+
+                    if (distance < 100 && canSendNotification({name: targetName})) { // Wenn der Benutzer weniger als 100 Meter entfernt ist
+                        sendNotification("Standort in der Nähe", {
+                            body: "Yessss es klappt.",
+                            icon: "/android/android-launchericon-512-512.png",
+                            tag: "example-notification"
+                        }); // Funktion zum Auslösen der Benachrichtigung
+                        setLocationModalIsOpen(true);
+                        setLocationNear({
+                            name: "Kühler Platz im Stadtpark",
+                            description: "Dieser Platz bietet viel Schatten und ist ideal zum Entspannen an heißen Tagen.",
+                            type: "waterFountain",  // Mögliche Werte: 'coolPlace', 'waterFountain', etc.
+                            distance: distance.toFixed(2),      // Distanz zum aktuellen Standort in Metern
+                            coordinates: {      // Optional: Koordinaten des Ortes
+                                lat: 51.245091,
+                                lng: 6.7957591
+                            }
+                        });
+                    }
                 },
                 (error) => {
                     console.error("Error retrieving location:", error);
@@ -120,7 +149,7 @@ const Map = ({route, routeStartAddress, routeEndAddress}) => {
                 }
                 let invertedHeading = 360 - compassHeading;
 
-                const smoothedHeading = smoothCompassValue(invertedHeading) - 45;
+                const smoothedHeading = smoothCompassValue(invertedHeading) - 52;
                 setHeading(smoothedHeading);
                 setUseCompass(true); // Compass-Daten erfolgreich verwendet
             }
@@ -170,68 +199,70 @@ const Map = ({route, routeStartAddress, routeEndAddress}) => {
     }, [route]);
 
     return (
-        <MapContainer
-            center={currentPosition || [51.245091, 6.7957591]}
-            zoom={15}
-            className="map"
-            ref={mapRef}
-        >
-            <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            />
+        <div>
+            <LocationModal modalIsOpen={locationModalIsOpen} closeModal={() => setLocationModalIsOpen(false)} mode={'information'} headline={'Trinkbrunnen'} textContent={'Beispieltext'} location={locationNear}></LocationModal>
+            <MapContainer
+                center={currentPosition || [51.245091, 6.7957591]}
+                zoom={15}
+                className="map"
+                ref={mapRef}
+            >
+                <TileLayer
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                />
 
-            {/* Schleife durch die Segmente in der Route */}
-            {route.length > 0 && route.map((segment, segmentIndex) => (
-                <React.Fragment key={segmentIndex}>
-                    {/* Zeichne die Linie für jedes Segment */}
-                    {segment.length > 0 && (
-                        <Polyline
-                            positions={segment.map(point => [point.lat, point.lng])}
-                            color={segment[0].color}  // Verwende die Farbe des ersten Punktes im Segment
-                            weight={6}
-                            opacity={0.9}
-                            lineCap="round"
-                        />
-                    )}
+                {/* Schleife durch die Segmente in der Route */}
+                {route.length > 0 && route.map((segment, segmentIndex) => (
+                    <React.Fragment key={segmentIndex}>
+                        {/* Zeichne die Linie für jedes Segment */}
+                        {segment.length > 0 && (
+                            <Polyline
+                                positions={segment.map(point => [point.lat, point.lng])}
+                                color={segment[0].color}  // Verwende die Farbe des ersten Punktes im Segment
+                                weight={6}
+                                opacity={0.9}
+                                lineCap="round"
+                            />
+                        )}
 
-                    {/* Zeichne das Polygon, wenn bounds existieren */}
-                    {segment[0].bounds && (
-                        <Polygon
-                            positions={segment[0].bounds.map(point => [point.y, point.x])}
-                            color={segment[0].color}
-                            fillOpacity={0.3}
-                        />
-                    )}
-                </React.Fragment>
-            ))}
+                        {/* Zeichne das Polygon, wenn bounds existieren */}
+                        {segment[0].bounds && (
+                            <Polygon
+                                positions={segment[0].bounds.map(point => [point.y, point.x])}
+                                color={segment[0].color}
+                                fillOpacity={0.3}
+                            />
+                        )}
+                    </React.Fragment>
+                ))}
 
-            {/* Markierungen für Start- und Endpunkt */}
-            {route.length > 0 && (
-                <>
-                    {/* Startpunkt */}
-                    <Marker position={[route[0][0].lat, route[0][0].lng]} icon={startIcon}>
-                        <Popup>{routeStartAddress}</Popup>
+                {/* Markierungen für Start- und Endpunkt */}
+                {route.length > 0 && (
+                    <>
+                        {/* Startpunkt */}
+                        <Marker position={[route[0][0].lat, route[0][0].lng]} icon={startIcon}>
+                            <Popup>{routeStartAddress}</Popup>
+                        </Marker>
+
+                        {/* Endpunkt */}
+                        <Marker position={[route[route.length - 1][route[route.length - 1].length - 1].lat, route[route.length - 1][route[route.length - 1].length - 1].lng]} icon={endIcon}>
+                            <Popup>{routeEndAddress}</Popup>
+                        </Marker>
+                    </>
+                )}
+
+                {/* Marker für die aktuelle Position */}
+                {currentPosition && (
+                    <Marker position={currentPosition} icon={currentLocationIcon}>
+                        <Popup>Your location</Popup>
                     </Marker>
+                )}
 
-                    {/* Endpunkt */}
-                    <Marker position={[route[route.length - 1][route[route.length - 1].length - 1].lat, route[route.length - 1][route[route.length - 1].length - 1].lng]} icon={endIcon}>
-                        <Popup>{routeEndAddress}</Popup>
-                    </Marker>
-                </>
-            )}
-
-            {/* Marker für die aktuelle Position */}
-            {currentPosition && (
-                <Marker position={currentPosition} icon={currentLocationIcon}>
-                    <Popup>Your location</Popup>
-                </Marker>
-            )}
-
-            {/* Button zum Zentrieren der Karte auf die aktuelle Position */}
-            <CenterButton />
-        </MapContainer>
-
+                {/* Button zum Zentrieren der Karte auf die aktuelle Position */}
+                <CenterButton />
+            </MapContainer>
+        </div>
     );
 };
 

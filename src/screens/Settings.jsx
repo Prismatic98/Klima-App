@@ -8,8 +8,9 @@ const Settings = () => {
     const { t, i18n } = useTranslation();
     const { voices } = useSpeechSynthesis();
     const savedSettings = JSON.parse(localStorage.getItem('userSettings'));
-
-    // States für die Einstellungen
+    const [route, setRoute] = useState([]);
+    const [routeStartAddress, setRouteStartAddress] = useState('');
+    const [routeEndAddress, setRouteEndAddress] = useState('');
     const [routePreference, setRoutePreference] = useState(savedSettings?.routePreference ?? 'ClimateBestPath');
     const [notificationsEnabled, setNotificationsEnabled] = useState(savedSettings?.notificationsEnabled ?? true);
     const [coolPlaceDistance, setCoolPlaceDistance] = useState(savedSettings?.coolPlaceDistance ?? 5);
@@ -77,7 +78,7 @@ const Settings = () => {
                 {/* Distanz zu kühlen Orten */}
                 <div className="setting-item slidecontainer">
                     <label
-                        className="block text-gray-700 text-sm font-bold mb-2"
+                        className="settings__label"
                         htmlFor="coolPlaceDistanceRange"
                     >
                         {t('settings.coolPlaceDistance')}:
@@ -101,7 +102,7 @@ const Settings = () => {
                 {/* Routenpräferenz */}
                 <div className="setting-item">
                     <label
-                        className="block text-gray-700 text-sm font-bold mb-2"
+                        className="settings__label"
                         htmlFor="routePreferenceSelect"
                     >
                         {t('settings.routePreference')}:
@@ -121,7 +122,7 @@ const Settings = () => {
                 {/* Spracheinstellung */}
                 <div className="setting-item">
                     <label
-                        className="block text-gray-700 text-sm font-bold mb-2"
+                        className="settings__label"
                         htmlFor="languageSelect"
                     >
                         {t('settings.language')}:
@@ -141,7 +142,7 @@ const Settings = () => {
                 {/* Push-Benachrichtigungen */}
                 <div className="setting-item flex items-center justify-between">
                     <label
-                        className="max-w-80 block text-gray-700 text-sm font-bold"
+                        className="settings__label"
                         htmlFor="notificationsToggle"
                     >
                         {t('settings.notifications')}:
@@ -161,7 +162,7 @@ const Settings = () => {
                 {/* Kontextbezogene Informationen */}
                 <div className="setting-item flex items-center justify-between">
                     <label
-                        className="max-w-80 block text-gray-700 text-sm font-bold"
+                        className="settings__label"
                         htmlFor="contextInfoToggle"
                     >
                         {t('settings.contextInfo')}:
@@ -180,7 +181,7 @@ const Settings = () => {
 
                 <div className="setting-item">
                     <label
-                        className="block text-gray-700 text-sm font-bold mb-2"
+                        className="settings__label"
                         htmlFor="voiceSelect"
                     >
                         {t('settings.voiceSelection')}:
@@ -200,7 +201,9 @@ const Settings = () => {
                     </select>
                 </div>
             </div>
-            <Footer/>
+            <Footer setRoute={setRoute}
+                    routeStartAddress={routeStartAddress} setRouteStartAddress={setRouteStartAddress}
+                    routeEndAddress={routeEndAddress} setRouteEndAddress={setRouteEndAddress} />
         </div>
 
     );

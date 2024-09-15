@@ -8,9 +8,9 @@ import {
     MdOutlineWbSunny
 } from "react-icons/md";
 
-const WeatherModal = ({ isOpen, onClose, warnings }) => {
+const WeatherModal = ({ modalIsOpen, closeModal, warnings }) => {
     const { t, i18n } = useTranslation();
-    if (!isOpen) return null;
+    if (!modalIsOpen) return null;
 
     // Funktion, um das passende Icon und die Farben basierend auf dem Modus zu definieren
     const getWarningIcon = (mode) => {
@@ -96,7 +96,7 @@ const WeatherModal = ({ isOpen, onClose, warnings }) => {
     };
 
     return (
-        <div className="weather-modal__container">
+        <div className="weather-modal__container modal--weather">
             <div className="weather-modal__backdrop" aria-hidden="true"></div>
             <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
             <div className="weather-modal__wrapper">
@@ -117,13 +117,15 @@ const WeatherModal = ({ isOpen, onClose, warnings }) => {
                     ))}
                 </div>
                 <div className="weather-modal__footer">
-                    <button
-                        type="button"
-                        className="weather-modal__button"
-                        onClick={onClose}
-                    >
-                        {t('general.close')}
-                    </button>
+                    <div className="modal__button-container">
+                        <button
+                            type="button"
+                            className="weather-modal__button"
+                            onClick={closeModal}
+                        >
+                            {t('general.close')}
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

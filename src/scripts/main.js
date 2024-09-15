@@ -5,48 +5,88 @@ export const getPageText = () => {
     return contentElement ? contentElement.innerText : '';
 };
 
-export const askNotificationPermission = () => {
-    return new Promise((resolve, reject) => {
-        const permissionResult = Notification.requestPermission(result => {
-            resolve(result);
-        });
+// Überprüfe, ob eine Notification/Modal gesendet werden darf
+export const canSendNotification = (currentLocation) => {
+    const locationThreshold = 60 * 1000; // 60 Sekunden in Millisekunden
+    const currentTime = Date.now(); // Aktuelle Zeit in Millisekunden
 
-        if (permissionResult) {
-            permissionResult.then(resolve, reject);
-        }
-    }).then(permissionResult => {
-        if (permissionResult !== 'granted') {
-            throw new Error('Permission not granted for Notification');
-        }
-    });
-}
+    // Hole den letzten Standort und Zeitstempel aus dem localStorage
+    const lastLocation = JSON.parse(localStorage.getItem('lastLocation'));
+    const lastNotificationTime = localStorage.getItem('lastNotificationTime') || 0;
 
-export const subscribeUserToPush = () => {
-    return navigator.serviceWorker.ready.then(registration => {
-        return registration.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: urlBase64ToUint8Array('BGgWNLvItEqRELgjB-od0ni3X5RYi06q3ioU6xeKOpwaQMpp6qBSjyerDRJ-HNIajGTh00Jd0R2lgJM_E_RfUSM')
-        });
-    }).then(subscription => {
-        // Sende die Subscription-Daten an deinen Server
-        console.log('User is subscribed:', subscription);
-        return subscription;
-    }).catch(error => {
-        console.error('Failed to subscribe the user: ', error);
-    });
-}
+    // Prüfe, ob es 10 Sekunden her ist oder ob der Standort anders ist
+    if (!lastLocation || currentLocation.name !== lastLocation.name || (currentTime - lastNotificationTime) > locationThreshold) {
+        // Aktualisiere den letzten Standort und den Zeitstempel im localStorage
+        localStorage.setItem('lastLocation', JSON.stringify(currentLocation));
+        localStorage.setItem('lastNotificationTime', currentTime);
 
-export const urlBase64ToUint8Array = (base64String) => {
-    const padding = '='.repeat((4 - base64String.length % 4) % 4);
-    const base64 = (base64String + padding)
-        .replace(/-/g, '+')
-        .replace(/_/g, '/');
-
-    const rawData = window.atob(base64);
-    const outputArray = new Uint8Array(rawData.length);
-
-    for (let i = 0; i < rawData.length; ++i) {
-        outputArray[i] = rawData.charCodeAt(i);
+        return true;  // Benachrichtigung darf gesendet werden
     }
-    return outputArray;
+
+    return false;  // Benachrichtigung darf nicht gesendet werden
+};
+
+
+export const sendNotification = async (title, options) => {
+    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+        // Überprüfe, ob ein Service Worker registriert ist
+        const registration = await navigator.serviceWorker.ready;
+        registration.showNotification(title, options);
+    } else if ('Notification' in window) {
+        // Überprüfe, ob Notifications im Fenster unterstützt werden
+        if (Notification.permission === 'granted') {
+            new Notification(title, options);
+        } else if (Notification.permission !== 'denied') {
+            // Fordere die Benachrichtigungsberechtigung an
+            Notification.requestPermission().then(permission => {
+                if (permission === 'granted') {
+                    new Notification(title, options);
+                }
+            });
+        }
+    } else {
+        console.log('Benachrichtigungen werden von diesem Browser nicht unterstützt.');
+    }
 }
+
+export const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371e3; // Erdradius in Metern
+    const phi1 = lat1 * Math.PI / 180;
+    const phi2 = lat2 * Math.PI / 180;
+    const deltaPhi = (lat2 - lat1) * Math.PI / 180;
+    const deltaLambda = (lon2 - lon1) * Math.PI / 180;
+
+    const a = Math.sin(deltaPhi / 2) * Math.sin(deltaPhi / 2) +
+        Math.cos(phi1) * Math.cos(phi2) *
+        Math.sin(deltaLambda / 2) * Math.sin(deltaLambda / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    const distance = R * c; // Distanz in Metern
+    return distance;
+}
+
+export const arrayToTextContent = (arr) => {
+    return arr.map((item, index) => {
+        // Überprüfe, ob das Element ein Objekt oder ein Array ist
+        if (typeof item === 'object') {
+            return `Item ${index + 1}: ${JSON.stringify(item, null, 2)}`;
+        }
+        return `Item ${index + 1}: ${item}`;
+    }).join('\n'); // Verbinde alle Elemente mit einem Zeilenumbruch
+};
+
+export const getSystemInfo = () => {
+    const userAgent = navigator.userAgent;
+    const platform = navigator.platform;
+    const screenResolution = `${window.screen.width}x${window.screen.height}`;
+    const language = navigator.language;
+    const browserName = navigator.appName;
+
+    return {
+        userAgent,
+        platform,
+        screenResolution,
+        language,
+        browserName,
+    };
+};

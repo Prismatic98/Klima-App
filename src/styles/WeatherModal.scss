@@ -63,9 +63,9 @@
   }
 
   &__icon {
-    font-size: $icon-size-md;
+    font-size: $icon-size-lg;
     border-radius: 50%;
-    padding: $spacing-sm / 2;
+    padding: calc($spacing-sm / 2);
   }
 
   &__icon--rain {
