@@ -1,4 +1,5 @@
 .footer {
+    position: relative;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -6,52 +7,50 @@
     background-color: $secondary-color;
     color: white;
     height: 100%;
+    z-index: 1000;
 
     &__wrapper {
         position: fixed;
         bottom: 0;
         width: 100%;
         height: $toolbar-height;
-        z-index: 1;
+        z-index: 1000;
     }
 
-    &__icon {
-        font-size: $icon-size-sm;
-
-        &--big {
-            font-size: $icon-size-md;
-        }
-    }
-
-    &__button {
-        background-color: $primary-color;
-        border-radius: 50%;
+    &__item {
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
-        transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+        padding: 0.5rem;
+        position: relative;
+        transition: background-color 0.3s ease-in-out;
 
-        &:hover {
-            background-color: $primary-hover-color;
-            transform: scale(1.1);
+        &--active .icon-wrapper {
+            background-color: rgba(255, 255, 255, 0.2); // Pill-Effekt wenn aktiv
         }
 
-        &--big {
-            width: $icon-size-xxl;
-            height: $icon-size-xxl;
-            outline: 3px solid $secondary-color;
-        }
-
-        &-container {
+        &--primary {
             position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
             transform: translateY(-30px);
             z-index: 1000000;
+
+            .icon-wrapper {
+                padding: $spacing-md;
+            }
         }
     }
+
+    &__label {
+        font-size: $font-size-xs;
+        margin-top: calc($spacing-sm / 2);
+        color: $white-light;
+    }
 }
+
 
 .half-circle-button {
     position: absolute;
@@ -89,8 +88,8 @@
 
     &-wrapper {
         position: absolute;
-        top: 0;
-        left: 0;
+        top: 12px;
+        left: 12px;
         transition: opacity 0.3s ease;
     }
 }

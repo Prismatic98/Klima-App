@@ -1,6 +1,10 @@
+@import "styles/reset";
 @import "styles/variables";
 
 @import "leaflet/dist/leaflet.css";
+
+@import "styles/Button";
+@import "styles/Icon";
 
 @import "styles/Header";
 @import "styles/Footer";
@@ -9,7 +13,7 @@
 @import "styles/Modal";
 @import "styles/WeatherModal";
 @import "styles/Loading";
-@import "styles/RouteModal";
+@import "styles/Tutorial";
 
 @tailwind base;
 @tailwind components;

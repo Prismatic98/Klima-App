@@ -1,6 +1,6 @@
 {
   "home": {
-    "title": "Klima App Dusseldorf"
+    "title": "Climate App Dusseldorf"
   },
   "settings": {
     "title": "Settings",
@@ -8,7 +8,7 @@
     "routePreferenceAria": "Setting for route preference",
     "coolRoute": "Cool route",
     "fastRoute": "Fast route",
-    "coolPlaceDistance": "Cool place distance (in meters)",
+    "coolPlaceDistance": "Cool place distance",
     "coolPlaceDistanceAria": "Setting for cool place distance (in meters)",
     "meters": "Meters",
     "coolRoutes": "Cool routes",
@@ -24,19 +24,77 @@
     "contextInfoAria": "Enable contextual information",
     "voiceSelection": "Voice selection",
     "voiceSelectionAria": "Setting for voice selection",
-    "saveSettings": "Save settings"
+    "saveSettings": "Save settings",
+    "startAddress": "Start address",
+    "targetAddress": "Target address",
+    "stopover": "Stopover",
+    "information": {
+      "coolPlaceDistance": "This setting determines how far away from your route cool places should be taken into account. Cool places are, for example, shady places, parks or places with refreshing water. The shorter the set distance, the closer to the route cool places are searched for and preferred.",
+      "routePreference": "You can use the route preference to specify whether the app should prefer cooler or faster routes. The higher the percentage value, the greater the weighting when creating the route.",
+      "notifications": "If this function is activated, push notifications are sent to you via your device's system as soon as you are near a cool location.",
+      "contextInfo": "If this option is activated, you will receive additional information based on your current location or route. This includes tips on places of interest, cool places or recommendations on the current weather conditions in your area. This function helps you to make better informed decisions during your navigation.",
+      "stopover": "If required, add a stopover at a cool or drinking place near your route. The next suitable location within your specified maximum distance will be found automatically."
+    }
   },
   "footer": {
-    "abort": "Abort",
-    "start": "Start",
     "planRoute": "Plan route",
     "input_targetAddress_placeholder": "Enter target address",
-    "input_startAddress_placeholder": "Enter start address"
+    "input_startAddress_placeholder": "Enter start address",
+    "map": "Map",
+    "speak": "Speak",
+    "stop": "Stop",
+    "search": "Search",
+    "editRoute": "Edit route",
+    "route": "Route",
+    "drinkPlaces": "Drink places",
+    "coolPlaces": "Cool places",
+    "feedback": "Feedback",
+    "options": "Options"
   },
   "weatherModal": {
     "weatherAlerts": "Weather alerts"
   },
+  "feedbackModal": {
+    "headline": "Submit feedback",
+    "text": "Let us know how we can improve the app!",
+    "textareaPlaceholder": "Give feedback..."
+  },
+  "locationModal": {
+    "hintRefillStation": "This refill station is located in a building. Check the opening hours before going there."
+  },
+  "loading": {
+    "weatherAlerts": "Loading weather alerts...",
+    "weatherData": "Lade Wetterdaten...",
+    "addresses": "Loading addresses...",
+    "coolPlaces": "Loading cool places...",
+    "drinkPlaces": "Loading dring places...",
+    "route": "Loading route...",
+    "waitingForPermission": "Waiting for Access Permission..."
+  },
+  "weather": {
+    "condition": "Weather condition",
+    "temperature": "Temperature",
+    "windSpeed": "Wind Speed",
+    "humidity": "Humidity",
+    "precipitationProbability": "Precipitation Probability",
+    "noData": "No data",
+    "noDataAvailable": "No weather data available",
+    "dry": "Dry",
+    "fog": "Fog",
+    "rain": "Rain",
+    "sleet": "Sleet",
+    "snow": "Snow",
+    "hail": "Hail",
+    "thunderstorm": "Thunderstorm",
+    "solarIrradiation": "Solar irradiation"
+  },
   "general": {
-    "close": "Close"
+    "close": "Close",
+    "abort": "Abort",
+    "start": "Start",
+    "submit": "Submit",
+    "currentLocation": "Current Location",
+    "no": "No",
+    "yes": "Yes"
   }
 }

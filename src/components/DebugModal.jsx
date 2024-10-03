@@ -1,26 +1,28 @@
 import React from 'react';
-import { MdCheckCircle, MdError, MdInfo, MdWarning } from 'react-icons/md'; // Material Design Icons
+import { MdCheckCircle, MdError, MdInfo, MdWarning } from 'react-icons/md';
+import {useTranslation} from "react-i18next";
 
 const DebugModal = ({ modalIsOpen, closeModal, mode, headline, debugContent }) => {
+    const {t} = useTranslation();
     if (!modalIsOpen) return null;
 
     // Definiere das Icon basierend auf dem Modus
     let icon;
     switch (mode) {
         case 'success':
-            icon = <MdCheckCircle className="modal__icon modal__icon--success" />;
+            icon = <MdCheckCircle className="icon icon--success" />;
             break;
         case 'danger':
-            icon = <MdError className="modal__icon modal__icon--danger" />;
+            icon = <MdError className="icon icon--danger" />;
             break;
         case 'information':
-            icon = <MdInfo className="modal__icon modal__icon--information" />;
+            icon = <MdInfo className="icon icon--information" />;
             break;
         case 'fail':
-            icon = <MdWarning className="modal__icon modal__icon--fail" />;
+            icon = <MdWarning className="icon icon--fail" />;
             break;
         default:
-            icon = <MdInfo className="modal__icon text-gray-600" />;
+            icon = <MdInfo className="icon text-gray-600" />;
             break;
     }
 
@@ -28,9 +30,7 @@ const DebugModal = ({ modalIsOpen, closeModal, mode, headline, debugContent }) =
         <div className="modal modal--debug" onClick={closeModal}>
             <div className="modal__wrapper" onClick={(e) => e.stopPropagation()}>
                 <div className={`modal__header modal__header--${mode}`}>
-                    <div className="modal__icon-container">
-                        {icon}
-                    </div>
+                    {icon}
                     <h2 className="modal__headline">{headline}</h2>
                 </div>
                 <div className="modal__content">
@@ -42,13 +42,13 @@ const DebugModal = ({ modalIsOpen, closeModal, mode, headline, debugContent }) =
                         )}
                     </div>
                     <div className="modal__footer">
-                        <div className="modal__button-container">
+                        <div className="button-container">
                             <button
                                 type="button"
-                                className="modal__button modal__button--submit"
+                                className="button__primary button__primary--submit"
                                 onClick={closeModal}
                             >
-                                Schließen
+                                {t('general.close')}
                             </button>
                         </div>
                     </div>

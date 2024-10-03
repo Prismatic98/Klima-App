@@ -1,9 +1,8 @@
 import React from 'react';
-import logo from "../logo_1.webp";
+import '../styles/Loading.scss';
+import logo from '../logo_1.webp'; // Importiere das Logo, passe den Pfad entsprechend an
 
-const Loading = ({ message, isLoading }) => {
-    if (!isLoading) return null;
-
+const Loading = ({ message }) => {
     return (
         <div className="loading-screen flex flex-col justify-center items-center h-screen">
             {/* Logo-Animation */}

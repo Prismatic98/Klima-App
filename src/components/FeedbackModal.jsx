@@ -37,37 +37,35 @@ const FeedbackModal = ({ modalIsOpen, closeModal }) => {
         <div className="modal modal--feedback" onClick={closeModal}>
             <div className="modal__wrapper" onClick={(e) => e.stopPropagation()}>
                 <div className="modal__header">
-                    <div className={`modal__icon-container modal__bg--information`}>
-                        <MdOutgoingMail className="modal__icon modal__icon--information"/>
-                    </div>
-                    <h2 className="modal__headline">Feedback geben</h2>
+                    <MdOutgoingMail className="icon icon--information"/>
+                    <h2 className="modal__headline">{t('feedbackModal.headline')}</h2>
                 </div>
                 <div className="modal__content">
                     <div className="settings-item">
-                        <label className="settings__label">Teile uns mit, wie wir die App verbessern können!</label>
+                        <label className="settings__label">{t('feedbackModal.text')}</label>
                         <textarea
                             value={feedback}
                             onChange={(e) => setFeedback(e.target.value)}
                             className="settings__input"
-                            placeholder="Dein Feedback..."
+                            placeholder={t('feedbackModal.textareaPlaceholder')}
                             required
                         />
                     </div>
                     <div className="modal__footer">
-                        <div className="modal__button-container">
+                        <div className="button-container">
                             <button
                                 type="button"
-                                className="modal__button modal__button--cancel"
+                                className="button__primary button__primary--cancel"
                                 onClick={closeModal}
                             >
-                                {t('footer.abort')}
+                                {t('general.abort')}
                             </button>
                             <button
                                 type="button"
-                                className="modal__button modal__button--submit"
+                                className="button__primary button__primary--submit"
                                 onClick={sendFeedback}
                             >
-                                Senden
+                                {t('general.submit')}
                             </button>
                         </div>
                     </div>

@@ -18,11 +18,11 @@
     z-index: 2;
   }
 
-  &--weather {
+  &--route {
     z-index: 3;
   }
 
-  &--route {
+  &--weather {
     z-index: 4;
   }
 
@@ -31,10 +31,9 @@
     border-radius: $border-radius-md;
     width: 90%;
     max-width: 500px;
-    margin-top: 85px;
+    margin-top: $toolbar-offset;
 
     input {
-      padding: $spacing-sm;
       font-size: $font-size-sm;
       border: 1px solid #ccc;
       border-radius: $border-radius-sm;
@@ -45,7 +44,7 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    gap: $spacing-sm;
+    gap: $spacing-md;
     background: $secondary-color;
     padding: $spacing-md;
     text-align: center;
@@ -73,6 +72,7 @@
     color: white;
     font-size: $font-size-md;
     font-weight: bold;
+    text-align: left;
   }
 
   &__content {
@@ -80,69 +80,45 @@
     flex-direction: column;
     gap: $spacing-md;
     padding: $spacing-md;
+    max-height: 55vh;
+    overflow-y: auto;
   }
 
   &__text {
     color: black;
-  }
 
-  &__button {
-    padding: $spacing-sm $spacing-md;
-    color: white;
-    border: none;
-    border-radius: $border-radius-sm;
-    cursor: pointer;
-    font-size: $font-size-sm;
-    text-align: center;
-    width: 100%;
+    .weather-info {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
 
-    &--cancel {
-      @apply bg-rose-600;
+      &__item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
 
-      &:hover {
-        @apply bg-rose-700;
+        .icon {
+          font-size: 1.5rem;
+        }
       }
     }
 
-    &--submit {
-      @apply bg-blue-600;
+  }
 
-      &:hover {
-        @apply bg-blue-700;
-      }
+  &__warning {
+    @apply flex items-start p-4 bg-gray-50 rounded-lg;
+
+    &-content {
+      @apply ml-4;
     }
-  }
 
-  &__button-container {
-    display: flex;
-    gap: $spacing-sm;
-  }
+    &-headline {
+      @apply text-lg font-medium text-gray-800;
+    }
 
-  &__icon-container {
-    @apply flex-shrink-0 rounded-full flex items-center justify-center;
-    height: $icon-size-md;
-    width: $icon-size-md;
-    background-color: $secondary-color;
-  }
-
-  &__icon {
-    font-size: $icon-size-sm;
-  }
-
-  &__icon--success {
-    @apply text-green-100;
-  }
-
-  &__icon--danger {
-    @apply text-rose-400;
-  }
-
-  &__icon--information {
-    color: white;
-  }
-
-  &__icon--fail {
-    @apply text-yellow-100;
+    &-text {
+      @apply text-sm text-gray-600 mt-1;
+    }
   }
 }
 

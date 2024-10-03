@@ -1,0 +1,72 @@
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-sm;
+  padding: $spacing-sm $spacing-md;
+  color: white;
+  border: none;
+  border-radius: $border-radius-sm;
+  cursor: pointer;
+  font-size: $font-size-sm;
+  text-align: center;
+  width: 100%;
+}
+
+.button__primary {
+  @apply button;
+
+  &--cancel {
+    @apply bg-rose-600;
+
+    &:hover {
+      @apply bg-rose-700;
+    }
+  }
+
+  &--submit {
+    @apply bg-blue-600;
+
+    &:hover {
+      @apply bg-blue-700;
+    }
+  }
+}
+
+.button__secondary {
+  @apply button;
+  background: $secondary-color;
+}
+
+.button-container {
+  display: flex;
+  gap: $spacing-sm;
+}
+
+.button__dot {
+  background-color: $primary-color;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+
+  &:hover {
+    background-color: $primary-hover-color;
+    transform: scale(1.1);
+  }
+
+  &--big {
+    width: $icon-size-xxl;
+    height: $icon-size-xxl;
+    outline: 3px solid $secondary-color;
+  }
+}
+
+.button {
+  &--disabled {
+    background-color: $gray;
+    pointer-events: none;
+    cursor: not-allowed;
+  }
+}

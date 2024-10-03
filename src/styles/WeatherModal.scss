@@ -58,7 +58,7 @@
     @apply w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm;
   }
 
-  &__icon-container {
+  &__icon-container--header {
     @apply flex-shrink-0 h-12 w-12 rounded-full flex items-center justify-center;
   }
 

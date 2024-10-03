@@ -3,20 +3,27 @@ import { useTranslation } from 'react-i18next';
 import { useSpeechSynthesis } from 'react-speech-kit';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import DebugModal from "../components/DebugModal";
+import {MdInfo} from "react-icons/md";
+import InfoModal from "../components/InfoModal";
+import WeatherDataModal from "../components/WeatherDataModal";
 
-const Settings = () => {
+const Settings = ({ weatherData }) => {
     const { t, i18n } = useTranslation();
     const { voices } = useSpeechSynthesis();
     const savedSettings = JSON.parse(localStorage.getItem('userSettings'));
-    const [route, setRoute] = useState([]);
-    const [routeStartAddress, setRouteStartAddress] = useState('');
-    const [routeEndAddress, setRouteEndAddress] = useState('');
-    const [routePreference, setRoutePreference] = useState(savedSettings?.routePreference ?? 'ClimateBestPath');
+    const [routePreference, setRoutePreference] = useState(savedSettings?.routePreference ?? 50);
     const [notificationsEnabled, setNotificationsEnabled] = useState(savedSettings?.notificationsEnabled ?? true);
-    const [coolPlaceDistance, setCoolPlaceDistance] = useState(savedSettings?.coolPlaceDistance ?? 5);
+    const [coolPlaceDistance, setCoolPlaceDistance] = useState(savedSettings?.coolPlaceDistance ?? 100);
     const [language, setLanguage] = useState(savedSettings?.language ?? (i18n.language || 'de'));
     const [contextInfoEnabled, setContextInfoEnabled] = useState(savedSettings?.contextInfoEnabled ?? true);
-    const [selectedVoice, setSelectedVoice] = useState(savedSettings?.selectedVoice ?? 0);
+    // const [selectedVoice, setSelectedVoice] = useState(savedSettings?.selectedVoice ?? 0);
+    const [debugModalIsOpen, setDebugModalIsOpen] = useState(false);
+    const [weatherDataModalIsOpen, setWeatherDataModalIsOpen] = useState(false);
+    const [debugContent, setDebugContent] = useState([]);
+    const [infoModalIsOpen, setInfoModalIsOpen] = useState(false);
+    const [infoModalHeadline, setInfoModalHeadline] = useState('');
+    const [infoModalContent, setInfoModalContent] = useState('');
 
     // Hilfsfunktion zum Speichern der Einstellungen
     const saveSettings = (newSettings) => {
@@ -26,7 +33,7 @@ const Settings = () => {
             routePreference,
             language,
             contextInfoEnabled,
-            selectedVoice,
+            // selectedVoice,
             ...newSettings
         };
         localStorage.setItem('userSettings', JSON.stringify(updatedSettings));
@@ -64,34 +71,72 @@ const Settings = () => {
         saveSettings({ contextInfoEnabled: newValue });
     };
 
-    const handleSelectedVoiceChange = (e) => {
+    const openInfoModal = (topic) => {
+        let content = '';
+        let headline = '';
+
+        switch (topic) {
+            case 'coolPlaceDistance':
+                headline = t('settings.coolPlaceDistance');
+                content = t('settings.information.coolPlaceDistance');
+                break;
+            case 'routePreference':
+                headline = t('settings.routePreference');
+                content = t('settings.information.routePreference');
+                break;
+            case 'notifications':
+                headline = t('settings.notifications');
+                content = t('settings.information.notifications');
+                break;
+            case 'contextInfo':
+                headline = t('settings.contextInfo');
+                content = t('settings.information.contextInfo');
+                break;
+        }
+
+        setInfoModalHeadline(headline);
+        setInfoModalContent(content);
+        setInfoModalIsOpen(true);
+    }
+
+    /*const handleSelectedVoiceChange = (e) => {
         const value = e.target.value;
         setSelectedVoice(value);
         saveSettings({ selectedVoice: value });
-    };
+    };*/
 
     return (
         <div className="settings min-h-screen flex flex-col">
-            <Header title={t('settings.title')} />
+            <Header
+                title={t('settings.title')}
+                setDebugModalIsOpen={() => setDebugModalIsOpen(!debugModalIsOpen)}
+                setWeatherDataModalIsOpen={() => setWeatherDataModalIsOpen(!weatherDataModalIsOpen)}
+                weatherData={weatherData}/>
+            <WeatherDataModal modalIsOpen={weatherDataModalIsOpen} closeModal={() => setWeatherDataModalIsOpen(false)} headline={'Wetter'} weatherData={weatherData}></WeatherDataModal>
+            <DebugModal modalIsOpen={debugModalIsOpen} closeModal={() => setDebugModalIsOpen(false)} mode={'information'} headline={'Konsoleninhalt'} debugContent={debugContent}></DebugModal>
+            <InfoModal modalIsOpen={infoModalIsOpen} closeModal={() => setInfoModalIsOpen(false)} headline= {infoModalHeadline} content={infoModalContent}></InfoModal>
             <div className="content flex-grow p-6 space-y-8 bg-white rounded-lg max-w-lg mx-auto">
 
                 {/* Distanz zu kühlen Orten */}
                 <div className="setting-item slidecontainer">
-                    <label
-                        className="settings__label"
-                        htmlFor="coolPlaceDistanceRange"
-                    >
-                        {t('settings.coolPlaceDistance')}:
-                    </label>
+                    <div className="settings__label-wrapper">
+                        <label
+                            className="settings__label"
+                            htmlFor="coolPlaceDistanceRange"
+                        >
+                            {t('settings.coolPlaceDistance')}
+                        </label>
+                        <MdInfo className="icon text-blue-600" onClick={() => openInfoModal('coolPlaceDistance')} />
+                    </div>
                     <input
                         type="range"
                         id="coolPlaceDistanceRange"
                         aria-label={t('settings.coolPlaceDistanceAria')}
                         min="0"
-                        max="10"
-                        step="1"
+                        max="500"
+                        step="5"
                         value={coolPlaceDistance}
-                        className="slider w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-blue-500"
+                        className="slider w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-blue-600"
                         onChange={handleCoolPlaceDistanceChange}
                     />
                     <p className="text-sm text-gray-600 mt-2">
@@ -100,24 +145,37 @@ const Settings = () => {
                 </div>
 
                 {/* Routenpräferenz */}
-                <div className="setting-item">
-                    <label
-                        className="settings__label"
-                        htmlFor="routePreferenceSelect"
-                    >
-                        {t('settings.routePreference')}:
-                    </label>
-                    <select
-                        id="routePreferenceSelect"
+                <div className="setting-item slidecontainer">
+                    <div className="settings__label-wrapper">
+                        <label
+                            className="settings__label"
+                            htmlFor="routePreferenceSlider"
+                        >
+                            {t('settings.routePreference')}
+                        </label>
+                        <MdInfo className="icon text-blue-600" onClick={() => openInfoModal('routePreference')}/>
+                    </div>
+                    <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600">{t('settings.coolRoutes')}</span>
+                        <span className="text-sm text-gray-600">{t('settings.fastRoutes')}</span>
+                    </div>
+                    <input
+                        type="range"
+                        id="routePreferenceSlider"
                         aria-label={t('settings.routePreferenceAria')}
+                        min="0"
+                        max="100"
+                        step="1"
                         value={routePreference}
+                        className="slider w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-blue-600"
                         onChange={handleRoutePreferenceChange}
-                        className="block w-full mt-1 bg-white border border-gray-300 rounded-md shadow-sm focus:ring-blue-600 focus:border-blue-600"
-                    >
-                        <option value="ClimateBestPath">{t('settings.coolRoutes')}</option>
-                        <option value="ShortestPath">{t('settings.fastRoutes')}</option>
-                    </select>
+                    />
+                    <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600">{100 - routePreference}%</span>
+                        <span className="text-sm text-gray-600">{routePreference}%</span>
+                    </div>
                 </div>
+
 
                 {/* Spracheinstellung */}
                 <div className="setting-item">
@@ -125,7 +183,7 @@ const Settings = () => {
                         className="settings__label"
                         htmlFor="languageSelect"
                     >
-                        {t('settings.language')}:
+                        {t('settings.language')}
                     </label>
                     <select
                         id="languageSelect"
@@ -140,13 +198,16 @@ const Settings = () => {
                 </div>
 
                 {/* Push-Benachrichtigungen */}
-                <div className="setting-item flex items-center justify-between">
-                    <label
-                        className="settings__label"
-                        htmlFor="notificationsToggle"
-                    >
-                        {t('settings.notifications')}:
-                    </label>
+                <div className="setting-item flex justify-between">
+                    <div className="settings__label-wrapper">
+                        <label
+                            className="settings__label"
+                            htmlFor="notificationsToggle"
+                        >
+                            {t('settings.notifications')}
+                        </label>
+                        <MdInfo className="icon text-blue-600" onClick={() => openInfoModal('notifications')}/>
+                    </div>
                     <label className="settings-item switch">
                         <input
                             id="notificationsToggle"
@@ -160,13 +221,16 @@ const Settings = () => {
                 </div>
 
                 {/* Kontextbezogene Informationen */}
-                <div className="setting-item flex items-center justify-between">
-                    <label
-                        className="settings__label"
-                        htmlFor="contextInfoToggle"
-                    >
-                        {t('settings.contextInfo')}:
-                    </label>
+                <div className="setting-item flex justify-between">
+                    <div className="settings__label-wrapper">
+                        <label
+                            className="settings__label"
+                            htmlFor="contextInfoToggle"
+                        >
+                            {t('settings.contextInfo')}
+                        </label>
+                        <MdInfo className="icon text-blue-600" onClick={() => openInfoModal('contextInfo')}/>
+                    </div>
                     <label className="settings-item switch">
                         <input
                             id="contextInfoToggle"
@@ -179,7 +243,7 @@ const Settings = () => {
                     </label>
                 </div>
 
-                <div className="setting-item">
+                {/*<div className="setting-item">
                     <label
                         className="settings__label"
                         htmlFor="voiceSelect"
@@ -199,11 +263,9 @@ const Settings = () => {
                             </option>
                         ))}
                     </select>
-                </div>
+                </div>*/}
             </div>
-            <Footer setRoute={setRoute}
-                    routeStartAddress={routeStartAddress} setRouteStartAddress={setRouteStartAddress}
-                    routeEndAddress={routeEndAddress} setRouteEndAddress={setRouteEndAddress} />
+            <Footer/>
         </div>
 
     );

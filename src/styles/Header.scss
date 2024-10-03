@@ -3,5 +3,10 @@ header {
     top: 0;
     width: 100%;
     height: $toolbar-height;
-    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    padding: $spacing-md 0;
+    background-color: $primary-color;
+    color: white;
+    z-index: 1010;
 }

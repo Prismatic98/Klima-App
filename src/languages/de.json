@@ -8,7 +8,7 @@
     "routePreferenceAria": "Einstellung der Routenpräferenz",
     "coolRoute": "Kühle Route",
     "fastRoute": "Schnelle Route",
-    "coolPlaceDistance": "Distanz zu kühlen Orten (in Metern)",
+    "coolPlaceDistance": "Distanz zu kühlen Orten",
     "coolPlaceDistanceAria": "Einstellung für die Distanz zu kühlen Orten (in Metern)",
     "meters": "Meter",
     "coolRoutes": "Kühle Wege",
@@ -24,19 +24,77 @@
     "contextInfoAria": "Kontextbezogene Informationen aktivieren",
     "voiceSelection": "Stimmauswahl",
     "voiceSelectionAria": "Einstellung der Stimmauswahl",
-    "saveSettings": "Einstellungen speichern"
+    "saveSettings": "Einstellungen speichern",
+    "startAddress": "Startadresse",
+    "targetAddress": "Zieladresse",
+    "stopover": "Zwischenhalt",
+    "information": {
+      "coolPlaceDistance": "Diese Einstellung legt fest, wie weit von Ihrer Route entfernt kühle Orte berücksichtigt werden sollen. Kühle Orte sind beispielsweise schattige Plätze, Parks oder Orte mit erfrischendem Wasser. Je kürzer die eingestellte Distanz, desto näher an der Route werden kühle Orte gesucht und bevorzugt.",
+      "routePreference": "Mit der Routenpräferenz können Sie festlegen, ob die App kühlere oder schnellere Wege bevorzugen soll. Je höher der Prozentwert, desto größer ist die Gewichtung bei der Erstellung der Route.",
+      "notifications": "Ist diese Funktion aktiviert, werden Ihnen Push Benachrichtigungen über das System Ihres Geräts geschickt, sobald Sie sich in der Nähe eines kühlen Orts befinden.",
+      "contextInfo": "Wenn diese Option aktiviert ist, erhalten Sie zusätzliche Informationen, die auf Ihrem aktuellen Standort oder Ihrer Route basieren. Dazu gehören Hinweise auf Sehenswürdigkeiten, kühle Plätze oder Empfehlungen zur aktuellen Wetterlage in Ihrer Umgebung. Diese Funktion hilft Ihnen, besser informierte Entscheidungen während Ihrer Navigation zu treffen.",
+      "stopover": "Fügen Sie bei Bedarf einen Zwischenhalt bei einem kühlen- oder Trinkort in der Nähe Ihrer Route hinzu. Es wird automatisch der nächste passende Ort gefunden, der sich innerhalb Ihrer festgelegten maximalen Distanz befindet."
+    }
   },
   "footer": {
-    "abort": "Abbrechen",
-    "start": "Start",
     "planRoute": "Route planen",
     "input_targetAddress_placeholder": "Zieladresse eingeben",
-    "input_startAddress_placeholder": "Startadresse eingeben"
+    "input_startAddress_placeholder": "Startadresse eingeben",
+    "map": "Karte",
+    "speak": "Vorlesen",
+    "stop": "Stop",
+    "search": "Suche",
+    "editRoute": "Route bearbeiten",
+    "route": "Route",
+    "drinkPlaces": "Trinkplätze",
+    "coolPlaces": "Kühle Orte",
+    "feedback": "Feedback",
+    "options": "Optionen"
   },
   "weatherModal": {
     "weatherAlerts": "Wetterwarnungen"
   },
+  "feedbackModal": {
+    "headline": "Feedback geben",
+    "text": "Teile uns mit, wie wir die App verbessern können!",
+    "textareaPlaceholder": "Feedback geben..."
+  },
+  "locationModal": {
+    "hintRefillStation": "Diese Refillstation befindet sich in einem Gebäude. Informiere dich über die Öffnungszeiten, bevor du dich dorthin begibst."
+  },
+  "loading": {
+    "weatherAlerts": "Lade Wetterwarnungen...",
+    "weatherData": "Lade Wetterdaten...",
+    "addresses": "Lade Adressen...",
+    "coolPlaces": "Lade kühle Orte...",
+    "drinkPlaces": "Lade Trinkplätze...",
+    "route": "Lade Route...",
+    "waitingForPermission": "Warte auf Zugriffsberechtigung..."
+  },
+  "weather": {
+    "condition": "Wetterzustand",
+    "temperature": "Temperatur",
+    "windSpeed": "Windgeschwindigkeit",
+    "humidity": "Luftfeuchtigkeit",
+    "precipitationProbability": "Regenwahrscheinlichkeit",
+    "noData": "Keine Daten",
+    "noDataAvailable": "Keine Wetterdaten verfügbar",
+    "dry": "Trocken",
+    "fog": "Nebel",
+    "rain": "Regen",
+    "sleet": "Schneeregen",
+    "snow": "Schnee",
+    "hail": "Hagel",
+    "thunderstorm": "Gewitter",
+    "solarIrradiation": "Sonneneinstrahlung"
+  },
   "general": {
-    "close": "Schließen"
+    "close": "Schließen",
+    "abort": "Abbrechen",
+    "start": "Start",
+    "submit": "Senden",
+    "currentLocation": "Aktueller Standort",
+    "no": "Nein",
+    "yes": "Ja"
   }
 }

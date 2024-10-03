@@ -7,18 +7,21 @@ export const getPageText = () => {
 
 // Überprüfe, ob eine Notification/Modal gesendet werden darf
 export const canSendNotification = (currentLocation) => {
-    const locationThreshold = 60 * 1000; // 60 Sekunden in Millisekunden
-    const currentTime = Date.now(); // Aktuelle Zeit in Millisekunden
+    const savedSettings = JSON.parse(localStorage.getItem('userSettings'));
+    const notificationsEnabled = savedSettings?.notificationsEnabled;
+    //const locationThreshold = 60 * 1000; // 60 Sekunden in Millisekunden
+    //const currentTime = Date.now(); // Aktuelle Zeit in Millisekunden
 
     // Hole den letzten Standort und Zeitstempel aus dem localStorage
     const lastLocation = JSON.parse(localStorage.getItem('lastLocation'));
-    const lastNotificationTime = localStorage.getItem('lastNotificationTime') || 0;
+    //const lastNotificationTime = localStorage.getItem('lastNotificationTime') || 0;
 
     // Prüfe, ob es 10 Sekunden her ist oder ob der Standort anders ist
-    if (!lastLocation || currentLocation.name !== lastLocation.name || (currentTime - lastNotificationTime) > locationThreshold) {
+    // if ((!lastLocation || currentLocation.name !== lastLocation.name || (currentTime - lastNotificationTime) > locationThreshold) && notificationsEnabled) {
+    if ((!lastLocation || currentLocation.name !== lastLocation.name) && notificationsEnabled) {
         // Aktualisiere den letzten Standort und den Zeitstempel im localStorage
         localStorage.setItem('lastLocation', JSON.stringify(currentLocation));
-        localStorage.setItem('lastNotificationTime', currentTime);
+        //localStorage.setItem('lastNotificationTime', currentTime);
 
         return true;  // Benachrichtigung darf gesendet werden
     }
@@ -90,3 +93,13 @@ export const getSystemInfo = () => {
         browserName,
     };
 };
+
+export const getCurrentDate = () => {
+    const today = new Date();
+
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // Monate beginnen bei 0
+    const day = String(today.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+}

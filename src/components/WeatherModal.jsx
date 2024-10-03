@@ -4,7 +4,7 @@ import {
     MdFoggy,
     MdLocalFireDepartment,
     MdOutlineAcUnit, MdOutlineAir, MdOutlineBeachAccess, MdOutlineFlood,
-    MdOutlineThunderstorm,
+    MdOutlineThunderstorm, MdOutlineWarning,
     MdOutlineWbSunny
 } from "react-icons/md";
 
@@ -22,13 +22,13 @@ const WeatherModal = ({ modalIsOpen, closeModal, warnings }) => {
             case 'extremely persistent rain':
             case 'extremely heavy rain':
                 return (
-                    <MdOutlineBeachAccess className="weather-modal__icon weather-modal__icon--rain" />
+                    <MdOutlineBeachAccess className="icon icon--large icon--rain" />
                 );
             case 'high UV Index':
             case 'strong heat':
             case 'extreme heat':
                 return (
-                    <MdLocalFireDepartment className="weather-modal__icon weather-modal__icon--heat" />
+                    <MdLocalFireDepartment className="icon icon--large icon--heat" />
                 );
             case 'wind gusts':
             case 'gale-force gusts':
@@ -39,17 +39,17 @@ const WeatherModal = ({ modalIsOpen, closeModal, warnings }) => {
             case 'strong wind':
             case 'storm':
                 return (
-                    <MdOutlineAir className="weather-modal__icon weather-modal__icon--wind" />
+                    <MdOutlineAir className="icon icon--large icon--wind" />
                 );
             case 'fog':
             case 'thaw':
             case 'heavy thaw':
                 return (
-                    <MdFoggy className="weather-modal__icon weather-modal__icon--fog" />
+                    <MdFoggy className="icon icon--large icon--fog" />
                 );
             case 'Überflutung':
                 return (
-                    <MdOutlineFlood className="weather-modal__icon weather-modal__icon--flood" />
+                    <MdOutlineFlood className="icon icon--large icon--flood" />
                 );
             case 'thunderstorms':
             case 'heavy thunderstorms':
@@ -69,7 +69,7 @@ const WeatherModal = ({ modalIsOpen, closeModal, warnings }) => {
             case 'extreme thunderstorms with extreme hurricane-force gusts and very heavy rain heavy rain and hail':
             case 'extreme thunderstorms with extreme hurricane-force gusts, very heavy rain and hail':
                 return (
-                    <MdOutlineThunderstorm className="weather-modal__icon weather-modal__icon--storm" />
+                    <MdOutlineThunderstorm className="icon icon--large icon--storm" />
                 );
             case 'frost':
             case 'light snowfall':
@@ -86,41 +86,40 @@ const WeatherModal = ({ modalIsOpen, closeModal, warnings }) => {
             case 'extreme black ice':
             case 'icy surfaces':
                 return (
-                    <MdOutlineAcUnit className="weather-modal__icon weather-modal__icon--frost" />
+                    <MdOutlineAcUnit className="icon icon--large icon--frost" />
                 );
             default:
                 return (
-                    <MdOutlineWbSunny className="weather-modal__icon" />
+                    <MdOutlineWbSunny className="icon icon--large icon--default" />
                 );
         }
     };
 
     return (
-        <div className="weather-modal__container modal--weather">
-            <div className="weather-modal__backdrop" aria-hidden="true"></div>
-            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div className="weather-modal__wrapper">
-                <div className="weather-modal__header">
-                    <h3 className="weather-modal__headline">{t('weatherModal.weatherAlerts')}</h3>
+        <div className="modal modal--weather" onClick={closeModal}>
+            <div className="modal__wrapper" onClick={(e) => e.stopPropagation()}>
+                <div className="modal__header">
+                    <div className={`icon-container--header`}>
+                        <MdOutlineWarning className="icon icon--default"/>
+                    </div>
+                    <h2 className="modal__headline">{t('weatherModal.weatherAlerts')}</h2>
                 </div>
-                <div className="weather-modal__content">
+                <div className="modal__content">
                     {warnings.map((warning, index) => (
-                        <div key={index} className="weather-modal__warning">
-                            <div className="weather-modal__icon-container">
+                        <div key={index} className="modal__warning">
+                            <div className="icon-container">
                                 {getWarningIcon(warning.mode)}
                             </div>
-                            <div className="weather-modal__warning-content">
-                                <h4 className="weather-modal__warning-headline">{warning.headline}</h4>
-                                <p className="weather-modal__warning-text">{warning.textContent}</p>
+                            <div className="modal__warning-content">
+                                <h4 className="modal__warning-headline">{warning.headline}</h4>
+                                <p className="modal__warning-text">{warning.textContent}</p>
                             </div>
                         </div>
                     ))}
-                </div>
-                <div className="weather-modal__footer">
-                    <div className="modal__button-container">
+                    <div className="button-container">
                         <button
                             type="button"
-                            className="weather-modal__button"
+                            className="button__primary button__primary--submit"
                             onClick={closeModal}
                         >
                             {t('general.close')}

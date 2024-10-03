@@ -1,0 +1,91 @@
+.icon {
+  font-size: $icon-size-sm;
+  color: white;
+
+  &--small {
+    font-size: $icon-size-xs;
+  }
+
+  &--medium {
+    font-size: $icon-size-md;
+  }
+
+  &--large {
+    font-size: $icon-size-lg;
+    border-radius: 50%;
+    padding: calc($spacing-sm / 2);
+  }
+
+  &--primary {
+    color: $primary-color;
+  }
+
+  &--secondary {
+    color: $secondary-color;
+  }
+
+  &--gray {
+    @apply text-gray-400;
+  }
+
+  &--success {
+    @apply text-green-100;
+  }
+
+  &--danger {
+    @apply text-rose-400;
+  }
+
+  &--information, &--default {
+    color: white;
+  }
+
+  &--fail {
+    @apply text-yellow-100;
+  }
+
+  &--rain {
+    @apply bg-blue-100 text-blue-600;
+  }
+
+  &--heat {
+    @apply bg-red-100 text-red-600;
+  }
+
+  &--wind {
+    @apply bg-gray-100 text-gray-600;
+  }
+
+  &--fog {
+    @apply bg-gray-100 text-gray-600;
+  }
+
+  &--flood {
+    @apply bg-indigo-100 text-indigo-600;
+  }
+
+  &--storm {
+    @apply bg-yellow-100 text-yellow-600;
+  }
+
+  &--frost {
+    @apply bg-blue-200 text-blue-800;
+  }
+}
+
+.icon__header {
+  flex-shrink: 0;
+  height: $icon-size-md;
+  width: $icon-size-md;
+  background-color: $secondary-color;
+}
+
+.icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc($spacing-sm / 2) $spacing-md;
+  background-color: transparent;
+  border-radius: 25px;
+  transition: background-color 0.3s ease-in-out;
+}

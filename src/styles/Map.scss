@@ -9,7 +9,7 @@
     &__center-button {
         position: absolute;
         bottom: $spacing-md;
-        right: 5%;
+        right: $spacing-md;
         width: $icon-size-xl;
         height: $icon-size-xl;
         background-color: $primary-color;
@@ -22,6 +22,98 @@
         cursor: pointer;
     }
 }
+
+
+.route-info-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: $secondary-color;
+    color: #fff;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+    width: 100%;
+    font-size: 0.9rem;
+
+    .route-info {
+        display: flex;
+        align-items: center;
+        gap: $spacing-sm;
+        width: 100%;
+
+        &__icons {
+            position: absolute;
+            top: 75px;
+            right: $spacing-md;
+            display: flex;
+            flex-direction: column;
+            gap: $spacing-sm;
+        }
+
+        &__icon-wrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: $spacing-xs;
+            align-items: center;
+            border-radius: 50%;
+            background: $secondary-color;
+            width: 65px;
+            height: 65px;
+
+            .info-icon {
+                flex-shrink: 0;
+                font-size: $icon-size-sm;
+                color: white;
+            }
+
+            span {
+                font-size: $font-size-xs;
+                color: white;
+            }
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: $spacing-xs;
+            width: 90vw;
+        }
+
+        .info-icon {
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .info-text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .end-route-button {
+            @apply bg-rose-600;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: $spacing-xs $spacing-sm;
+            border-radius: $border-radius-sm;
+
+            .end-route-icon {
+                font-size: 1.5rem;
+            }
+        }
+    }
+}
+
+
 
 .current-location-icon {
     position: relative;
@@ -63,4 +155,52 @@
         transform: translate(-50%, -50%) scale(2);
         opacity: 0;
     }
+}
+
+.custom-div-icon {
+    position: relative;
+    width: 30px;
+    height: 42px;
+
+    .pin {
+        width: 30px;
+        height: 30px;
+        background-color: $secondary-color;
+        border-radius: 50% 50% 50% 0; // Hiermit wird die Tropfenform erstellt
+        transform: rotate(-45deg);    // Rotiert, damit der Tropfen wie ein Pin aussieht
+        position: absolute;
+        top: 0;
+        left: 0;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); // Schatten für einen 3D-Effekt
+    }
+
+    .pin::after {
+        content: '';
+        width: 14px;
+        height: 14px;
+        background-color: white;
+        border-radius: 50%;
+        position: absolute;
+        top: 8px;
+        left: 8px;
+    }
+
+    .pin-icon {
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background-color: $secondary-color;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        z-index: 2;
+    }
+}
+
+.leaflet-control-container {
+    display: none;
 }
