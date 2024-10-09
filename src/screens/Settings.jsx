@@ -7,18 +7,20 @@ import DebugModal from "../components/DebugModal";
 import {MdInfo} from "react-icons/md";
 import InfoModal from "../components/InfoModal";
 import WeatherDataModal from "../components/WeatherDataModal";
+import NotificationsModal from "../components/NotificationsModal";
 
-const Settings = ({ weatherData }) => {
+const Settings = ({ weatherData, notifications, setNotifications }) => {
     const { t, i18n } = useTranslation();
     const { voices } = useSpeechSynthesis();
     const savedSettings = JSON.parse(localStorage.getItem('userSettings'));
     const [routePreference, setRoutePreference] = useState(savedSettings?.routePreference ?? 50);
     const [notificationsEnabled, setNotificationsEnabled] = useState(savedSettings?.notificationsEnabled ?? true);
-    const [coolPlaceDistance, setCoolPlaceDistance] = useState(savedSettings?.coolPlaceDistance ?? 100);
+    const [coolPlaceDistance, setCoolPlaceDistance] = useState(savedSettings?.coolPlaceDistance ?? 200);
     const [language, setLanguage] = useState(savedSettings?.language ?? (i18n.language || 'de'));
     const [contextInfoEnabled, setContextInfoEnabled] = useState(savedSettings?.contextInfoEnabled ?? true);
     // const [selectedVoice, setSelectedVoice] = useState(savedSettings?.selectedVoice ?? 0);
     const [debugModalIsOpen, setDebugModalIsOpen] = useState(false);
+    const [notificationsModalIsOpen, setNotificationsModalIsOpen] = useState(false);
     const [weatherDataModalIsOpen, setWeatherDataModalIsOpen] = useState(false);
     const [debugContent, setDebugContent] = useState([]);
     const [infoModalIsOpen, setInfoModalIsOpen] = useState(false);
@@ -111,9 +113,12 @@ const Settings = ({ weatherData }) => {
                 title={t('settings.title')}
                 setDebugModalIsOpen={() => setDebugModalIsOpen(!debugModalIsOpen)}
                 setWeatherDataModalIsOpen={() => setWeatherDataModalIsOpen(!weatherDataModalIsOpen)}
-                weatherData={weatherData}/>
+                weatherData={weatherData}
+                setNotificationsModalIsOpen={() => setNotificationsModalIsOpen(!notificationsModalIsOpen)}
+                notifications={notifications}/>
             <WeatherDataModal modalIsOpen={weatherDataModalIsOpen} closeModal={() => setWeatherDataModalIsOpen(false)} headline={'Wetter'} weatherData={weatherData}></WeatherDataModal>
             <DebugModal modalIsOpen={debugModalIsOpen} closeModal={() => setDebugModalIsOpen(false)} mode={'information'} headline={'Konsoleninhalt'} debugContent={debugContent}></DebugModal>
+            <NotificationsModal modalIsOpen={notificationsModalIsOpen} closeModal={() => setNotificationsModalIsOpen(false)} notifications={notifications} setNotifications={setNotifications}></NotificationsModal>
             <InfoModal modalIsOpen={infoModalIsOpen} closeModal={() => setInfoModalIsOpen(false)} headline= {infoModalHeadline} content={infoModalContent}></InfoModal>
             <div className="content flex-grow p-6 space-y-8 bg-white rounded-lg max-w-lg mx-auto">
 
@@ -133,7 +138,7 @@ const Settings = ({ weatherData }) => {
                         id="coolPlaceDistanceRange"
                         aria-label={t('settings.coolPlaceDistanceAria')}
                         min="0"
-                        max="500"
+                        max="1000"
                         step="5"
                         value={coolPlaceDistance}
                         className="slider w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-blue-600"

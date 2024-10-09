@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { MdBugReport, MdOutlineArrowBack } from 'react-icons/md';
 import {
     BsSunFill,
     BsCloudFill,
@@ -14,6 +13,8 @@ import {
     BsCloudHailFill,
     BsCloudLightningFill,
 } from 'react-icons/bs';
+import {MdOutlineArrowBack} from "react-icons/md";
+import { MdNotifications } from "react-icons/md";
 
 const getWeatherIcon = (weatherData) => {
     switch (weatherData.icon) {
@@ -44,21 +45,32 @@ const getWeatherIcon = (weatherData) => {
     }
 };
 
-const Header = ({ title, setDebugModalIsOpen, setWeatherDataModalIsOpen, weatherData }) => {
+const Header = ({ title, setDebugModalIsOpen, setWeatherDataModalIsOpen, setNotificationsModalIsOpen, weatherData, notifications }) => {
     const location = useLocation(); // React Router Hook zum Abrufen des aktuellen Pfads
     const navigate = useNavigate(); // React Router Hook für Navigation
     const [weatherIcon, setWeatherIcon] = useState('');
     const [temperature, setTemperature] = useState('');
+    const [clickCount, setClickCount] = useState(0); // Zähler für Klicks
 
     // Funktion, um zur vorherigen Seite zurückzukehren
     const goBack = () => {
         navigate(-1); // Zurück zur vorherigen Seite
     };
 
+    // Funktion, um Klicks auf h1 zu zählen und nach 6 Klicks Debug-Modal zu öffnen
+    const handleTitleClick = () => {
+        setClickCount(prevCount => prevCount + 1);
+
+        if (clickCount + 1 === 6) {
+            setDebugModalIsOpen(true); // Debug-Modal nach 6 Klicks öffnen
+            setClickCount(0); // Zähler zurücksetzen
+        }
+    };
+
     useEffect(() => {
         if (weatherData) {
             setWeatherIcon(getWeatherIcon(weatherData));
-            setTemperature(weatherData.temperature);
+            setTemperature(Math.round(weatherData.temperature).toString());
         }
     }, [weatherData]);
 
@@ -70,22 +82,30 @@ const Header = ({ title, setDebugModalIsOpen, setWeatherDataModalIsOpen, weather
                 </button>
             ) : (
                 <button
-                    onClick={() => setWeatherDataModalIsOpen(true)}
-                    className="absolute left-4 top-1/2 transform -translate-y-1/2"
+                    onClick={setWeatherDataModalIsOpen}
+                    className="flex flex-col items-center absolute left-4 top-1/2 transform -translate-y-1/2"
                     aria-label="Wetter"
                 >
                     {weatherIcon}
                     <span className="text-sm">{temperature}°C</span>
                 </button>
             )}
-            <h1 className="text-xl font-bold">{title}</h1>
-            <button
-                onClick={() => setDebugModalIsOpen(true)}
-                className="absolute right-4 top-1/2 transform -translate-y-1/2"
-                aria-label="Test-Benachrichtigung"
+            <h1
+                className="text-xl font-bold"
+                onClick={handleTitleClick} // Klick-Event hinzufügen
             >
-                <MdBugReport className="icon" size={25} />
-            </button>
+                {title}
+            </h1>
+            {location.pathname === '/' && (
+                <button onClick={setNotificationsModalIsOpen} className="absolute right-4 top-1/2 transform -translate-y-1/2">
+                    <MdNotifications className="icon" />
+                    {notifications.length > 0 && (
+                        <span className="notifications-count">
+                            {notifications.length}
+                        </span>
+                    )}
+                </button>
+            )}
         </header>
     );
 };

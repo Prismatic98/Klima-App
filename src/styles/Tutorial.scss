@@ -16,10 +16,11 @@
   .tutorial-step {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     color: white;
     text-align: center;
+    height: 100%;
 
     &__headline-wrapper {
       display: flex;
@@ -32,7 +33,7 @@
     &__headline {
       font-size: $font-size-md;
       width: 70%;
-      text-align: left;
+      text-align: center;
     }
 
     &__icon {
@@ -42,7 +43,7 @@
     &__text {
       font-size: $font-size-sm;
       margin-bottom: $spacing-md;
-      text-align: left;
+      text-align: center;
       height: 100px;
     }
 

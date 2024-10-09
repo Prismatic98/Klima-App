@@ -174,6 +174,7 @@ export const getClimatePlaces = async (types) => {
 export const getRouteToCoolPlace = async (startPoint, endPoint) => {
     const preparedQueryUrl = 'https://cs.climateapp.webtec.medien.hs-duesseldorf.de/contextserver/ContextServerAPI/predefined';
     const params = new URLSearchParams();
+    let distance = 0.00252;
 
     params.append('application', 'DerendorfPlan');
 
@@ -184,6 +185,8 @@ export const getRouteToCoolPlace = async (startPoint, endPoint) => {
         params.append('query', 'ShortestPathFromPositionToCoolPlace');
         params.append('param_xPosition', longitude);
         params.append('param_yPosition', latitude);
+        distance = await checkPathsNearBy(longitude, latitude, distance);
+        console.log('Distanz: ' + distance);
     } else {
         params.append('situation', 'ShortestPathFromWayToCoolPlace');
         params.append('query', 'ShortestPathFromWayToCoolPlace');
@@ -195,7 +198,7 @@ export const getRouteToCoolPlace = async (startPoint, endPoint) => {
     params.append('param_breakAfterMS', '10000');
     params.append('param_resultSize', '1');
     params.append('param_maxOptSteps', '30');
-    params.append('param_distance', '10');
+    params.append('param_distance', distance.toString());
 
     const options = {
         method: 'POST',
@@ -241,12 +244,50 @@ export const getRouteToCoolPlace = async (startPoint, endPoint) => {
     };
 }
 
+export const checkPathsNearBy = async (longitude, latitude, distance = 0.00252) => {
+    const preparedQueryUrl = 'https://cs.climateapp.webtec.medien.hs-duesseldorf.de/contextserver/ContextServerAPI/predefined';
+
+    const params = new URLSearchParams();
+    params.append('application', 'DerendorfPlan');
+    params.append('situation', 'PathsNearBy');
+    params.append('query', 'PathsNearBy');
+    params.append('param_xPosition', longitude);
+    params.append('param_yPosition', latitude);
+    params.append('param_distance', distance.toString());
+
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: params.toString()
+    };
+
+    try {
+        const response = await fetch(preparedQueryUrl, options);
+        const data = await response.json();
+
+        // Überprüfen, ob "size" existiert und größer als 0 ist
+        if (data.size && data.size > 0) {
+            return distance;  // Ergebnis zurückgeben, wenn "size" größer als 0 ist
+        } else {
+            // Distance um 0.003 erhöhen und die Anfrage erneut ausführen
+            return await checkPathsNearBy(longitude, latitude, distance + 0.003);
+        }
+    } catch (error) {
+        console.error('Fehler bei der Anfrage:', error);
+        throw error;  // Fehler weitergeben, um die Handhabung zu ermöglichen
+    }
+};
+
+
 export const getRoute = async (routePreference, routeStartAddress, routeEndAddress, coolPlaceStopover) => {
     const savedSettings = JSON.parse(localStorage.getItem('userSettings'));
     const preparedQueryUrl = 'https://cs.climateapp.webtec.medien.hs-duesseldorf.de/contextserver/ContextServerAPI/predefined';
 
     const routeLengthWeight = 100 - routePreference;
     const bioclimateWeight = routePreference;
+    let distance = 0.00252;
 
     const params = new URLSearchParams();
     params.append('application', 'DerendorfPlan');
@@ -257,6 +298,8 @@ export const getRoute = async (routePreference, routeStartAddress, routeEndAddre
         params.append('query', 'ClimateBestPathNearCoolAreasFromPositionToBuilding');
         params.append('param_xPosition', longitude);
         params.append('param_yPosition', latitude);
+        distance = await checkPathsNearBy(longitude, latitude, distance);
+        console.log('Distanz: ' + distance);
     } else {
         params.append('situation', 'ClimateBestPathNearCoolAreas');
         params.append('query', 'ClimateBestPathNearCoolAreas');
@@ -276,7 +319,7 @@ export const getRoute = async (routePreference, routeStartAddress, routeEndAddre
     params.append('param_breakAfterMS', '10000');
     params.append('param_resultSize', '1');
     params.append('param_maxOptSteps', '30');
-    params.append('param_distance', '0.5');
+    params.append('param_distance', distance.toString());
 
     const options = {
         method: 'POST',
@@ -329,7 +372,7 @@ export const getRoute = async (routePreference, routeStartAddress, routeEndAddre
             bigRoute.pop(); // Entfernt den letzten leeren Schritt, falls vorhanden
 
             // Überprüfe, ob der nächste kühle Ort in Reichweite ist
-            if (coolPlaceStopover && coolPlaceDistance <= (savedSettings?.coolPlaceDistance ?? 100)) {
+            if (coolPlaceStopover && coolPlaceDistance <= (savedSettings?.coolPlaceDistance ?? 200)) {
                 coolPlaceIsNear = true;
 
                 const coolPlaceRouteObj = await getRouteToCoolPlace(wayToCoolPlace, coolPlaceName);

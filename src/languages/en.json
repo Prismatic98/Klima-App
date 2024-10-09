@@ -95,6 +95,9 @@
     "submit": "Submit",
     "currentLocation": "Current Location",
     "no": "No",
-    "yes": "Yes"
+    "yes": "Yes",
+    "notifications": "Benachrichtigungen",
+    "noNotifications": "Keine Benachrichtigungen",
+    "coolPlacesNear": "Cool Places near your location"
   }
 }

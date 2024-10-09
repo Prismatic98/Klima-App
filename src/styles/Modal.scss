@@ -26,6 +26,10 @@
     z-index: 4;
   }
 
+  &--weather {
+    z-index: 5;
+  }
+
   &__wrapper {
     background-color: white;
     border-radius: $border-radius-md;
@@ -121,4 +125,77 @@
     }
   }
 }
+
+.notifications-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  .notification-item {
+    border-bottom: 1px solid $gray;
+    padding: $spacing-sm 0;
+    display: flex;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .notification-content {
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-xs;
+      flex: 1;
+    }
+
+    .notification-name {
+      font-size: $font-size-sm;
+      font-weight: bold;
+      color: $secondary-color;
+      display: flex;
+      gap: $spacing-sm;
+    }
+
+    .notification-details {
+      display: flex;
+      flex-wrap: wrap;
+      gap: $spacing-md;
+      justify-content: space-between;
+      align-items: flex-end;
+
+      .notification-distance {
+        font-size: $font-size-xs;
+        color: gray;
+      }
+
+      .notification-buttons {
+        display: flex;
+        gap: $spacing-sm;
+
+        button {
+          color: white;
+          padding: $spacing-xs;
+          border-radius: $border-radius-sm;
+          border: none;
+          cursor: pointer;
+          font-size: $font-size-xs;
+        }
+      }
+
+      .button__open {
+        background-color: $primary-color;
+      }
+
+      .button__delete {
+        @apply bg-rose-600;
+      }
+    }
+  }
+
+  .empty-message {
+    text-align: center;
+    color: gray;
+    font-size: $font-size-sm;
+  }
+}
+
 

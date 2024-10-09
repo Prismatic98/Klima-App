@@ -23,6 +23,7 @@ const App = () => {
     const [coolPlaces, setCoolPlaces] = useState([]);
     const [showTutorial, setShowTutorial] = useState(!localStorage.getItem('tutorialFinished'));
     const [weatherData, setWeatherData] = useState(null);
+    const [notifications, setNotifications] = useState(JSON.parse(localStorage.getItem('notifications')) ?? []);
 
     useEffect(() => {
         if (!showTutorial) {
@@ -191,8 +192,10 @@ const App = () => {
                                                coolPlaces={coolPlaces} isLoading={isLoading} setIsLoading={setIsLoading}
                                                loadingMessage={loadingMessage}
                                                setLoadingMessage={setLoadingMessage}
-                                                weatherData={weatherData} />}/>
-                <Route path="/settings" element={<Settings weatherData={weatherData}/>} />
+                                                weatherData={weatherData}
+                                                notifications={notifications} setNotifications={setNotifications}/>}/>
+                <Route path="/settings" element={<Settings weatherData={weatherData}
+                                                           notifications={notifications} setNotifications={setNotifications}/>} />
             </Routes>
         </Router>
     );

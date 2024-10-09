@@ -10,3 +10,19 @@ header {
     color: white;
     z-index: 1010;
 }
+
+.notifications-count {
+    @apply bg-rose-600;
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    color: white;
+    border-radius: 50%;
+    font-size: $font-size-xs;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+}

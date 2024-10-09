@@ -6,28 +6,44 @@ export const getPageText = () => {
 };
 
 // Überprüfe, ob eine Notification/Modal gesendet werden darf
-export const canSendNotification = (currentLocation) => {
+export const canSendNotification = (currentLocation, distanceToCurrentLocation) => {
     const savedSettings = JSON.parse(localStorage.getItem('userSettings'));
     const notificationsEnabled = savedSettings?.notificationsEnabled;
-    //const locationThreshold = 60 * 1000; // 60 Sekunden in Millisekunden
-    //const currentTime = Date.now(); // Aktuelle Zeit in Millisekunden
+    let maxDistance = savedSettings?.coolPlaceDistance ?? 200;
+    maxDistance = parseInt(maxDistance);
 
-    // Hole den letzten Standort und Zeitstempel aus dem localStorage
-    const lastLocation = JSON.parse(localStorage.getItem('lastLocation'));
-    //const lastNotificationTime = localStorage.getItem('lastNotificationTime') || 0;
+    // Hole die Liste der bereits benachrichtigten Orte aus dem LocalStorage
+    const coolPlaces = JSON.parse(localStorage.getItem('coolPlaces')) || [];
 
-    // Prüfe, ob es 10 Sekunden her ist oder ob der Standort anders ist
-    // if ((!lastLocation || currentLocation.name !== lastLocation.name || (currentTime - lastNotificationTime) > locationThreshold) && notificationsEnabled) {
-    if ((!lastLocation || currentLocation.name !== lastLocation.name) && notificationsEnabled) {
-        // Aktualisiere den letzten Standort und den Zeitstempel im localStorage
-        localStorage.setItem('lastLocation', JSON.stringify(currentLocation));
-        //localStorage.setItem('lastNotificationTime', currentTime);
+    // Prüfe, ob Benachrichtigungen aktiviert sind und die Distanz zum aktuellen Standort kleiner als maxDistance ist
+    if (notificationsEnabled && distanceToCurrentLocation && distanceToCurrentLocation < maxDistance) {
+        // Überprüfe, ob der aktuelle Ort bereits in der Liste der kühlen Orte gespeichert ist
+        const now = Date.now();
+        const existingPlace = coolPlaces.find(place => place.name === currentLocation.name);
 
-        return true;  // Benachrichtigung darf gesendet werden
+        if (existingPlace) {
+            // Prüfe, ob der gespeicherte Ort älter als 24 Stunden ist (24 Stunden = 86400000 Millisekunden)
+            const timeElapsed = now - existingPlace.timestamp;
+            if (timeElapsed < 86400000) {
+                return false; // Der Ort wurde bereits innerhalb der letzten 24 Stunden gefunden
+            } else {
+                // Ort ist älter als 24 Stunden, daher Liste aktualisieren
+                existingPlace.timestamp = now; // Zeitstempel aktualisieren
+                localStorage.setItem('coolPlaces', JSON.stringify(coolPlaces));
+                return true; // Benachrichtigung kann gesendet werden
+            }
+        } else {
+            // Ort wurde noch nicht gefunden, daher in die Liste aufnehmen
+            coolPlaces.push({ name: currentLocation.name, timestamp: now });
+            localStorage.setItem('coolPlaces', JSON.stringify(coolPlaces));
+
+            return true; // Benachrichtigung darf gesendet werden
+        }
     }
 
-    return false;  // Benachrichtigung darf nicht gesendet werden
+    return false; // Benachrichtigung darf nicht gesendet werden
 };
+
 
 
 export const sendNotification = async (title, options) => {

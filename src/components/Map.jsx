@@ -17,6 +17,7 @@ import {sendNotification, calculateDistance, canSendNotification} from "../scrip
 import LocationModal from "./LocationModal";
 import {useTranslation} from "react-i18next";
 import {getRoute, getRouteToCoolPlace} from "../scripts/routeFunctions";
+import notificationsModal from "./NotificationsModal";
 
 // Standard Leaflet Icons
 const startIcon = new L.Icon({
@@ -34,13 +35,36 @@ const endIcon = new L.Icon({
     shadowSize: [41, 41]
 });
 
-const Map = ({route, setRoute, routeLength, routeDuration, setRouteLength, setRouteDuration, routeStartAddress, setRouteStartAddress, routeEndAddress, setRouteEndAddress, coolPlaces, drinkPlaces, currentPosition, isLoading, setIsLoading, loadingMessage, setLoadingMessage}) => {
+const Map = ({
+                 route,
+                 setRoute,
+                 routeLength,
+                 routeDuration,
+                 setRouteLength,
+                 setRouteDuration,
+                 routeStartAddress,
+                 setRouteStartAddress,
+                 routeEndAddress,
+                 setRouteEndAddress,
+                 coolPlaces,
+                 drinkPlaces,
+                 currentPosition,
+                 notifications,
+                 setNotifications,
+                 isLoading,
+                 setIsLoading,
+                 loadingMessage,
+                 setLoadingMessage,
+                 locationModalIsOpen,
+                 setLocationModalIsOpen,
+                 locationNear,
+                 openLocationModal,
+                 setNotificationsModal
+             }) => {
     const {t} = useTranslation();
     const [heading, setHeading] = useState(0); // Blickrichtung
     const headingHistory = useRef([]); // Array zur Speicherung der letzten Kompasswerte
     const [useCompass, setUseCompass] = useState(false); // Zustand für die Nutzung der Compass-Daten
-    const [locationModalIsOpen, setLocationModalIsOpen] = useState(false);
-    const [locationNear, setLocationNear] = useState(null);
     const [isMapCentered, setIsMapCentered] = useState(false);
 
     const currentLocationIconSVG = `
@@ -126,34 +150,30 @@ const Map = ({route, setRoute, routeLength, routeDuration, setRouteLength, setRo
             const { xCentral: targetLng, yCentral: targetLat } = place.attributes.position;
             const distance = calculateDistance(currentPosition.lat, currentPosition.lng, targetLat, targetLng);
 
-            if (distance < 200 && canSendNotification({ name: place.name })) { // Wenn der Benutzer weniger als 100 Meter entfernt ist
+            if (canSendNotification({ name: place.name }, distance)) {
                 sendNotification(`In der Nähe: ${place.name}`, {
                     body: `Sie befinden sich in der Nähe von ${place.name}.`,
                     icon: "/android/android-launchericon-512-512.png",
                     tag: `notification-${place.id}`
                 });
-                openLocationModal(place, placeType, distance);
+                setNotifications(prevNotifications => {
+                    const updatedNotifications = [
+                        ...prevNotifications,
+                        {
+                            place,
+                            placeType,
+                            distance
+                        }
+                    ];
+
+                    // Benachrichtigungen im localStorage speichern
+                    localStorage.setItem('notifications', JSON.stringify(updatedNotifications));
+
+                    return updatedNotifications;
+                });
             }
         }
     };
-
-    const openLocationModal = (place, placeType, distance) => {
-        if (!distance)
-            distance = calculateDistance(currentPosition.lat, currentPosition.lng, place.attributes.position.yCentral, place.attributes.position.xCentral);
-        setLocationModalIsOpen(true);
-        console.log(place);
-        setLocationNear({
-            name: place.name,
-            description: 'Bei diesem Ort handelt es sich um folgendes: ',
-            specificType: place.attributes.typ,
-            generalType: placeType,
-            distance: parseInt(distance), // Distanz zum aktuellen Standort in Metern
-            coordinates: {
-                lat: place.attributes.position.yCentral,
-                lng: place.attributes.position.xCentral
-            }
-        });
-    }
 
     const currentLocationIcon = new L.DivIcon({
         html: useCompass ? `<div style="transform: rotate(${heading}deg);">${currentLocationIconSVG}</div>` : fallbackLocationIconSVG,
@@ -163,6 +183,7 @@ const Map = ({route, setRoute, routeLength, routeDuration, setRouteLength, setRo
 
     const handleStartRoute = async () => {
         setLocationModalIsOpen(false);
+        setNotificationsModal(false);
         setIsLoading(true);
         setLoadingMessage(t('loading.route'));
         setRouteStartAddress(`${currentPosition.lat}, ${currentPosition.lng}`);
@@ -262,7 +283,7 @@ const Map = ({route, setRoute, routeLength, routeDuration, setRouteLength, setRo
                 }
                 let invertedHeading = 360 - compassHeading;
 
-                const smoothedHeading = smoothCompassValue(invertedHeading) - 52;
+                const smoothedHeading = smoothCompassValue(invertedHeading) - 55;
                 setHeading(smoothedHeading);
                 setUseCompass(true); // Compass-Daten erfolgreich verwendet
             }

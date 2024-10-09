@@ -48,7 +48,7 @@ const WeatherDataModal = ({ modalIsOpen, closeModal, headline, weatherData }) =>
                                 {/* Temperatur */}
                                 <div className="weather-info__item">
                                     <MdDeviceThermostat className="icon icon--gray" />
-                                    <span>{t('weather.temperature')}: {weatherData.temperature !== null ? `${weatherData.temperature}°C` : t('weather.noData')}</span>
+                                    <span>{t('weather.temperature')}: {weatherData.temperature !== null ? `${Math.round(weatherData.temperature).toString()}°C` : t('weather.noData')}</span>
                                 </div>
 
                                 {/* Windgeschwindigkeit */}

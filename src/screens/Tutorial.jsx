@@ -93,11 +93,11 @@ const Tutorial = ({ onFinish }) => {
                                 {step.icon}
                                 <h2 className="tutorial-step__headline">{step.headline}</h2>
                             </div>
-                            <p className="tutorial-step__text">{step.description}</p>
                             <div className="tutorial-step__image-container">
                                 {step.image}
                                 {step.imageDescription}
                             </div>
+                            <p className="tutorial-step__text">{step.description}</p>
                         </div>
                     </SwiperSlide>
                 ))}

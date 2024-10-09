@@ -5,11 +5,12 @@ import Map from "../components/Map";
 import Footer from "../components/Footer";
 import WeatherModal from "../components/WeatherModal";
 import DebugModal from "../components/DebugModal";
+import NotificationsModal from "../components/NotificationsModal";
 import {calculateDistance, canSendNotification, sendNotification} from "../scripts/main";
 import Loading from "../components/Loading";
 import WeatherDataModal from "../components/WeatherDataModal";
 
-const Home = ({warnings, addresses, coolPlaces, drinkPlaces, isLoading, setIsLoading, loadingMessage, setLoadingMessage, weatherData}) => {
+const Home = ({warnings, addresses, coolPlaces, drinkPlaces, isLoading, setIsLoading, loadingMessage, setLoadingMessage, weatherData, notifications, setNotifications}) => {
     const {t} = useTranslation();
     const [route, setRoute] = useState([]);
     const [routeLength, setRouteLength] = useState(0);
@@ -18,7 +19,10 @@ const Home = ({warnings, addresses, coolPlaces, drinkPlaces, isLoading, setIsLoa
     const [routeEndAddress, setRouteEndAddress] = useState('');
     const [isWeatherModalOpen, setWeatherIsModalOpen] = useState(false);
     const [debugModalIsOpen, setDebugModalIsOpen] = useState(false);
+    const [notificationsModalIsOpen, setNotificationsModalIsOpen] = useState(false);
     const [weatherDataModalIsOpen, setWeatherDataModalIsOpen] = useState(false);
+    const [locationModalIsOpen, setLocationModalIsOpen] = useState(false);
+    const [locationNear, setLocationNear] = useState(null);
     const [debugContent, setDebugContent] = useState([]);
     const [currentPosition, setCurrentPosition] = useState(null);
 
@@ -60,6 +64,24 @@ const Home = ({warnings, addresses, coolPlaces, drinkPlaces, isLoading, setIsLoa
         displayConsole('info', args);
     };
 
+    const openLocationModal = (place, placeType, distance) => {
+        if (!distance)
+            distance = calculateDistance(currentPosition.lat, currentPosition.lng, place.attributes.position.yCentral, place.attributes.position.xCentral);
+        setLocationModalIsOpen(true);
+        console.log(place);
+        setLocationNear({
+            name: place.name,
+            description: 'Bei diesem Ort handelt es sich um folgendes: ',
+            specificType: place.attributes.typ,
+            generalType: placeType,
+            distance: parseInt(distance), // Distanz zum aktuellen Standort in Metern
+            coordinates: {
+                lat: place.attributes.position.yCentral,
+                lng: place.attributes.position.xCentral
+            }
+        });
+    }
+
     useEffect(() => {
         if (navigator.geolocation) {
             const watchId = navigator.geolocation.watchPosition(
@@ -97,9 +119,13 @@ const Home = ({warnings, addresses, coolPlaces, drinkPlaces, isLoading, setIsLoa
                 title={t('home.title')}
                 setDebugModalIsOpen={() => setDebugModalIsOpen(!debugModalIsOpen)}
                 setWeatherDataModalIsOpen={() => setWeatherDataModalIsOpen(!weatherDataModalIsOpen)}
-                weatherData={weatherData}/>
+                weatherData={weatherData}
+                setNotificationsModalIsOpen={() => setNotificationsModalIsOpen(!notificationsModalIsOpen)}
+                notifications={notifications}
+            />
             <WeatherDataModal modalIsOpen={weatherDataModalIsOpen} closeModal={() => setWeatherDataModalIsOpen(false)} headline={'Wetter'} weatherData={weatherData}></WeatherDataModal>
             <DebugModal modalIsOpen={debugModalIsOpen} closeModal={() => setDebugModalIsOpen(false)} mode={'information'} headline={'Konsoleninhalt'} debugContent={debugContent}></DebugModal>
+            <NotificationsModal modalIsOpen={notificationsModalIsOpen} closeModal={() => setNotificationsModalIsOpen(false)} notifications={notifications} setNotifications={setNotifications} openLocationModal={openLocationModal}></NotificationsModal>
             <WeatherModal
                 modalIsOpen={isWeatherModalOpen}
                 closeModal={() => setWeatherIsModalOpen(false)}
@@ -118,6 +144,9 @@ const Home = ({warnings, addresses, coolPlaces, drinkPlaces, isLoading, setIsLoa
                      currentPosition={currentPosition}
                      isLoading={isLoading} setIsLoading={setIsLoading}
                      loadingMessage={loadingMessage} setLoadingMessage={setLoadingMessage}
+                    notifications={notifications} setNotifications={setNotifications}
+                    locationModalIsOpen={locationModalIsOpen} setLocationModalIsOpen={setLocationModalIsOpen}
+                    locationNear={locationNear} openLocationModal={openLocationModal} setNotificationsModal={setNotificationsModalIsOpen}
                 />
             </div>
             <Footer route={route}
