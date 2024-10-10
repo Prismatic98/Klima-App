@@ -226,7 +226,7 @@ const Settings = ({ weatherData, notifications, setNotifications }) => {
                 </div>
 
                 {/* Kontextbezogene Informationen */}
-                <div className="setting-item flex justify-between">
+                {/*<div className="setting-item flex justify-between">
                     <div className="settings__label-wrapper">
                         <label
                             className="settings__label"
@@ -246,7 +246,7 @@ const Settings = ({ weatherData, notifications, setNotifications }) => {
                         />
                         <span className="toggle round"></span>
                     </label>
-                </div>
+                </div>*/}
 
                 {/*<div className="setting-item">
                     <label
