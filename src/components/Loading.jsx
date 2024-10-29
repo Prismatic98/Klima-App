@@ -6,7 +6,6 @@ const Loading = ({ message, isLoading }) => {
 
     return (
         <div className="loading-screen flex flex-col justify-center items-center h-screen">
-            {/* Logo-Animation */}
             <div className="logo-container">
                 <img src={logo} alt="Loading Logo" className="logo" />
                 <div className="loading-pulse"></div>

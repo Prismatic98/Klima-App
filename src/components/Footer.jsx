@@ -80,22 +80,6 @@ const Footer = ({
         }
     };
 
-    /*const handleShowCoolPlaces = async () => {
-        const places = await getClimatePlaces(["Wasserspielplatz"]);
-        setCoolPlaces(places);
-        console.log(places)
-        goToHome();
-        closeModal();
-    }*/
-
-    /*const handleShowDrinkPlaces = async () => {
-        const places = await getClimatePlaces(["Refillstation", "Trinkbrunnen"]);
-        setDrinkPlaces(places);
-        console.log(places[0]);
-        goToHome();
-        closeModal();
-    }*/
-
     const handleStartRoute = async () => {
         closeModal();
         goToHome();
@@ -192,29 +176,6 @@ const Footer = ({
                             </button>
                         )}
                         <span className="footer__label">{isSearchActive || route.length > 0 ? t('general.abort') : t('footer.route')}</span>
-
-                        {/*<div className="half-circle-button-wrapper">
-                            <div className={"button__dot half-circle-button half-circle-button" + (showButtons ? '--show' : '--hidden')} onClick={handleRouteClick}>
-                                <div className="icon-wrapper">
-                                    <MdEditLocationAlt className="icon" />
-                                </div>
-                                <span className="footer__label">{t('footer.editRoute')}</span>
-                            </div>
-
-                            <div className={"button__dot half-circle-button half-circle-button" + (showButtons ? '--show' : '--hidden')}>
-                                <div className="icon-wrapper">
-                                    <MdWaterDrop className="icon" />
-                                </div>
-                                <span className="footer__label">{t('footer.drinkPlaces')}</span>
-                            </div>
-
-                            <div className={"button__dot half-circle-button half-circle-button" + (showButtons ? '--show' : '--hidden')}>
-                                <div className="icon-wrapper">
-                                    <MdOutlineAcUnit className="icon" />
-                                </div>
-                                <span className="footer__label">{t('footer.coolPlaces')}</span>
-                            </div>
-                        </div>*/}
                     </div>
                 )}
 

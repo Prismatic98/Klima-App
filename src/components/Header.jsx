@@ -52,18 +52,16 @@ const Header = ({ title, setDebugModalIsOpen, setWeatherDataModalIsOpen, setNoti
     const [temperature, setTemperature] = useState('');
     const [clickCount, setClickCount] = useState(0); // Zähler für Klicks
 
-    // Funktion, um zur vorherigen Seite zurückzukehren
     const goBack = () => {
-        navigate(-1); // Zurück zur vorherigen Seite
+        navigate(-1);
     };
 
-    // Funktion, um Klicks auf h1 zu zählen und nach 6 Klicks Debug-Modal zu öffnen
     const handleTitleClick = () => {
         setClickCount(prevCount => prevCount + 1);
 
         if (clickCount + 1 === 6) {
-            setDebugModalIsOpen(true); // Debug-Modal nach 6 Klicks öffnen
-            setClickCount(0); // Zähler zurücksetzen
+            setDebugModalIsOpen(true);
+            setClickCount(0);
         }
     };
 
@@ -91,8 +89,7 @@ const Header = ({ title, setDebugModalIsOpen, setWeatherDataModalIsOpen, setNoti
                 </button>
             )}
             <h1
-                className="text-xl font-bold"
-                onClick={handleTitleClick} // Klick-Event hinzufügen
+                onClick={handleTitleClick}
             >
                 {title}
             </h1>

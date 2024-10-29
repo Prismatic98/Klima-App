@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import '../styles/libs/swiper-bundle.min.css'; // Importiere Swiper CSS
+import '../styles/libs/swiper-bundle.min.css';
 import '../styles/Tutorial.scss';
 import tutorial_step_1_img from '../images/tutorial_step_1.png';
 import tutorial_step_2_img from '../images/tutorial_step_2.png';

@@ -12,7 +12,6 @@ const WeatherModal = ({ modalIsOpen, closeModal, warnings }) => {
     const { t, i18n } = useTranslation();
     if (!modalIsOpen) return null;
 
-    // Funktion, um das passende Icon und die Farben basierend auf dem Modus zu definieren
     const getWarningIcon = (mode) => {
         switch (mode) {
             case 'heavy rain':

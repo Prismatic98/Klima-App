@@ -17,9 +17,7 @@ import {sendNotification, calculateDistance, canSendNotification} from "../scrip
 import LocationModal from "./LocationModal";
 import {useTranslation} from "react-i18next";
 import {getRoute, getRouteToCoolPlace} from "../scripts/routeFunctions";
-import notificationsModal from "./NotificationsModal";
 
-// Standard Leaflet Icons
 const startIcon = new L.Icon({
     iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
     iconSize: [25, 41],
@@ -66,6 +64,7 @@ const Map = ({
     const headingHistory = useRef([]); // Array zur Speicherung der letzten Kompasswerte
     const [useCompass, setUseCompass] = useState(false); // Zustand für die Nutzung der Compass-Daten
     const [isMapCentered, setIsMapCentered] = useState(false);
+    const [hasFitBounds, setHasFitBounds] = useState(false); // Zustand, um zu prüfen, ob fitBounds bereits ausgeführt wurde
 
     const currentLocationIconSVG = `
     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="#007bff" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-navigation">
@@ -181,7 +180,7 @@ const Map = ({
         className: 'current-location-icon',
     });
 
-    const handleStartRoute = async () => {
+    const handleStartRouteToCoolPlace = async () => {
         setLocationModalIsOpen(false);
         setNotificationsModal(false);
         setIsLoading(true);
@@ -198,24 +197,29 @@ const Map = ({
 
     const RouteInfoContainer = () => {
         const map = useMap();
-        const bounds = new L.LatLngBounds(
-            route.map(segment => {
-                return segment.map(point => [point.lat, point.lng])
-            })
-        );
-        map.fitBounds(bounds, {padding: [50, 50]});
+
+        useEffect(() => {
+            // fitBounds nur einmal ausführen, wenn die Route geladen wird und noch nicht zentriert wurde
+            if (!hasFitBounds && route.length > 0) {
+                const bounds = new L.LatLngBounds(
+                    route.map((segment) => segment.map((point) => [point.lat, point.lng]))
+                );
+                map.fitBounds(bounds, { padding: [50, 50] });
+
+                // Setze hasFitBounds auf true, um zu verhindern, dass fitBounds erneut aufgerufen wird
+                setHasFitBounds(true);
+            }
+        }, [map, route, hasFitBounds]);
 
         return (
             <div className="route-info-container">
-                {/* Start- und Endpunkt */}
+                {/* Weitere Details zur Route */}
                 <div className="route-info">
                     <div className="info-item">
                         <MdLocationOn className="info-icon" />
                         <span className="info-text">{routeStartAddress}</span>
                     </div>
                 </div>
-
-                {/* Distanz und Dauer */}
                 <div className="route-info">
                     <div className="info-item w-100 flex-grow">
                         <div className="info-item">
@@ -236,7 +240,7 @@ const Map = ({
                 </div>
             </div>
         );
-    }
+    };
 
     const CurrentPositionMarker = () => {
         const map = useMap();
@@ -275,6 +279,12 @@ const Map = ({
     }, [currentPosition]);
 
     useEffect(() => {
+        if (window.DeviceOrientationEvent) {
+            setUseCompass(true); // Setze direkt auf true, wenn die API unterstützt wird
+        } else {
+            console.warn("Device Orientation API is not supported by this browser.");
+            setUseCompass(false); // Setze auf false, wenn die API nicht unterstützt wird
+        }
         const handleOrientation = (event) => {
             if (event.absolute && event.alpha !== null) {
                 let compassHeading = event.alpha;
@@ -285,7 +295,6 @@ const Map = ({
 
                 const smoothedHeading = smoothCompassValue(invertedHeading) - 55;
                 setHeading(smoothedHeading);
-                setUseCompass(true); // Compass-Daten erfolgreich verwendet
             }
         };
 
@@ -301,7 +310,7 @@ const Map = ({
 
     return (
         <div>
-            <LocationModal modalIsOpen={locationModalIsOpen} closeModal={() => setLocationModalIsOpen(false)} onRouteStart={() => handleStartRoute()} location={locationNear} />
+            <LocationModal modalIsOpen={locationModalIsOpen} closeModal={() => setLocationModalIsOpen(false)} onRouteStart={() => handleStartRouteToCoolPlace()} location={locationNear} />
             <MapContainer
                 center={currentPosition || [51.245091, 6.7957591]}
                 zoom={15}
@@ -326,8 +335,17 @@ const Map = ({
                                 positions={segment.map(point => [point.lat, point.lng])}
                                 color={segment[0].color}
                                 weight={6}
-                                opacity={0.9}
+                                opacity={1}
                                 lineCap="round"
+                                eventHandlers={{
+                                    click: (e) => {
+                                        const map = e.target._map; // Zugriff auf die Leaflet-Karte
+                                        const popup = L.popup()
+                                            .setLatLng(e.latlng) // Die Position des Klicks
+                                            .setContent(segment[0].name?.split('_')[0]) // Inhalt des Popups
+                                            .openOn(map); // Öffnet das Popup auf der Karte
+                                    }
+                                }}
                             />
                         )}
 
@@ -366,7 +384,6 @@ const Map = ({
                         icon={coolPlaceIcon()}
                         eventHandlers={{ click: () => openLocationModal(place, 'coolPlace') }}
                     >
-                        <Popup>{place.name}</Popup>
                     </Marker>
                 ))}
 
@@ -378,7 +395,6 @@ const Map = ({
                         icon={drinkPlaceIcon()}
                         eventHandlers={{ click: () => openLocationModal(place, 'drinkPlace') }}
                     >
-                        <Popup>{place.name}</Popup>
                     </Marker>
                 ))}
 

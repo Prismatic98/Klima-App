@@ -10,11 +10,10 @@ const NotificationsModal = ({ modalIsOpen, closeModal, notifications, setNotific
     const { t } = useTranslation();
     if (!modalIsOpen) return null;
 
-    // Funktion zum Löschen der Benachrichtigung
     const deleteNotification = (index) => {
         const updatedNotifications = notifications.filter((_, i) => i !== index);
         localStorage.setItem('notifications', JSON.stringify(updatedNotifications));
-        setNotifications(updatedNotifications); // State aktualisieren
+        setNotifications(updatedNotifications);
     };
 
     return (

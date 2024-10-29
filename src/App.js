@@ -14,6 +14,7 @@ const App = () => {
     const savedSettings = JSON.parse(localStorage.getItem('userSettings'));
     const { t } = useTranslation();
     const { i18n } = useTranslation();
+    const [debugContent, setDebugContent] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isFetching, setIsFetching] = useState(false);
     const [loadingMessage, setLoadingMessage] = useState("");
@@ -24,6 +25,45 @@ const App = () => {
     const [showTutorial, setShowTutorial] = useState(!localStorage.getItem('tutorialFinished'));
     const [weatherData, setWeatherData] = useState(null);
     const [notifications, setNotifications] = useState(JSON.parse(localStorage.getItem('notifications')) ?? []);
+
+    // Speichere die Originalmethoden von console
+    const originalConsole = {
+        log: console.log,
+        error: console.error,
+        warn: console.warn,
+        info: console.info
+    };
+
+    // Erstelle eine Funktion, die den Konsoleninhalt auf der Seite anzeigt
+    const displayConsole = (type, args) => {
+        const message = `[${type}] ${args.join(' ')}`;
+        setDebugContent([...debugContent, JSON.stringify(message)]);
+    };
+
+    // Überschreibe die console.log Methode
+    console.log = function (...args) {
+        originalConsole.log.apply(console, args);
+        displayConsole('log', args);
+    };
+
+    // Überschreibe console.error
+    console.error = function (...args) {
+        originalConsole.error.apply(console, args);
+        displayConsole('error', args);
+    };
+
+    // Überschreibe console.warn
+    console.warn = function (...args) {
+        originalConsole.warn.apply(console, args);
+        displayConsole('warn', args);
+    };
+
+    // Überschreibe console.info
+    console.info = function (...args) {
+        originalConsole.info.apply(console, args);
+        displayConsole('info', args);
+    };
+
 
     useEffect(() => {
         if (!showTutorial) {
@@ -140,6 +180,7 @@ const App = () => {
         try {
             setLoadingMessage(t('loading.addresses'));
             const data = await getAddresses();
+            console.log(data)
             setAddresses(data);
         } catch (error) {
             console.error('Fehler beim Abrufen der Adressen:', error);
@@ -149,7 +190,7 @@ const App = () => {
     const fetchCoolPlaces = async () => {
         try {
             setLoadingMessage(t('loading.coolPlaces'));
-            const data = await getClimatePlaces(["Wasserspielplatz"]);
+            const data = await getClimatePlaces(["Wasserspielplatz", "KuehlerOrtInnen"]);
             setCoolPlaces(data);
         } catch (error) {
             console.error('Fehler beim Abrufen der kühlen Orte:', error);
@@ -160,6 +201,7 @@ const App = () => {
         try {
             setLoadingMessage(t('loading.drinkPlaces'));
             const data = await getClimatePlaces(["Refillstation", "Trinkbrunnen"]);
+
             setDrinkPlaces(data);
         } catch (error) {
             console.error('Fehler beim Abrufen der Trinkplätze:', error);
@@ -193,9 +235,11 @@ const App = () => {
                                                loadingMessage={loadingMessage}
                                                setLoadingMessage={setLoadingMessage}
                                                 weatherData={weatherData}
-                                                notifications={notifications} setNotifications={setNotifications}/>}/>
+                                                notifications={notifications} setNotifications={setNotifications}
+                                                debugContent={debugContent}/>}/>
                 <Route path="/settings" element={<Settings weatherData={weatherData}
-                                                           notifications={notifications} setNotifications={setNotifications}/>} />
+                                                           notifications={notifications} setNotifications={setNotifications}
+                                                            debugContent={debugContent}/>} />
             </Routes>
         </Router>
     );

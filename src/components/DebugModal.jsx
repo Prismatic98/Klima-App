@@ -6,7 +6,6 @@ const DebugModal = ({ modalIsOpen, closeModal, mode, headline, debugContent }) =
     const {t} = useTranslation();
     if (!modalIsOpen) return null;
 
-    // Definiere das Icon basierend auf dem Modus
     let icon;
     switch (mode) {
         case 'success':

@@ -1,11 +1,10 @@
 import React from 'react';
 import '../styles/Loading.scss';
-import logo from '../logo_1.webp'; // Importiere das Logo, passe den Pfad entsprechend an
+import logo from '../logo_1.webp';
 
 const Loading = ({ message }) => {
     return (
         <div className="loading-screen flex flex-col justify-center items-center h-screen">
-            {/* Logo-Animation */}
             <div className="logo-container">
                 <img src={logo} alt="Loading Logo" className="logo" />
                 <div className="loading-pulse"></div>

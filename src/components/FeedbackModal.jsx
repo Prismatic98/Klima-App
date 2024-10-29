@@ -1,29 +1,28 @@
 import React, { useState } from 'react';
-import { getSystemInfo } from '../scripts/main'; // Funktion zum Sammeln von Systeminformationen
-import { db } from '../Firebase.js'; // Firebase Firestore-Instanz importieren
+import { getSystemInfo } from '../scripts/main';
+import { db } from '../Firebase.js';
 import { collection, addDoc } from 'firebase/firestore';
 import {MdOutgoingMail} from "react-icons/md";
-import {useTranslation} from "react-i18next"; // Firestore-Funktionen
+import {useTranslation} from "react-i18next";
 
 const FeedbackModal = ({ modalIsOpen, closeModal }) => {
     const {t} = useTranslation();
     const [feedback, setFeedback] = useState('');
-    const [status, setStatus] = useState(null); // Statusnachricht (z.B. Erfolg oder Fehler)
+    const [status, setStatus] = useState(null);
 
-    if (!modalIsOpen) return null; // Rückgabe, wenn das Modal nicht offen ist
+    if (!modalIsOpen) return null;
 
     const sendFeedback = async () => {
-        const systemInfo = getSystemInfo(); // Systeminformationen sammeln
+        const systemInfo = getSystemInfo();
         if (feedback) {
             try {
-                // Feedback und Systeminformationen in Firestore speichern
                 await addDoc(collection(db, 'feedback'), {
                     feedback: feedback,
                     ...systemInfo,
                     timestamp: new Date(),
                 });
                 setStatus('Feedback erfolgreich gesendet!');
-                setFeedback(''); // Formular zurücksetzen
+                setFeedback('');
             } catch (error) {
                 setStatus('Fehler beim Senden des Feedbacks.');
                 console.error('Error sending feedback: ', error);

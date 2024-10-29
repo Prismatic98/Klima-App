@@ -9,7 +9,7 @@ import InfoModal from "../components/InfoModal";
 import WeatherDataModal from "../components/WeatherDataModal";
 import NotificationsModal from "../components/NotificationsModal";
 
-const Settings = ({ weatherData, notifications, setNotifications }) => {
+const Settings = ({ weatherData, notifications, setNotifications, debugContent }) => {
     const { t, i18n } = useTranslation();
     const { voices } = useSpeechSynthesis();
     const savedSettings = JSON.parse(localStorage.getItem('userSettings'));
@@ -22,7 +22,6 @@ const Settings = ({ weatherData, notifications, setNotifications }) => {
     const [debugModalIsOpen, setDebugModalIsOpen] = useState(false);
     const [notificationsModalIsOpen, setNotificationsModalIsOpen] = useState(false);
     const [weatherDataModalIsOpen, setWeatherDataModalIsOpen] = useState(false);
-    const [debugContent, setDebugContent] = useState([]);
     const [infoModalIsOpen, setInfoModalIsOpen] = useState(false);
     const [infoModalHeadline, setInfoModalHeadline] = useState('');
     const [infoModalContent, setInfoModalContent] = useState('');
@@ -101,12 +100,6 @@ const Settings = ({ weatherData, notifications, setNotifications }) => {
         setInfoModalIsOpen(true);
     }
 
-    /*const handleSelectedVoiceChange = (e) => {
-        const value = e.target.value;
-        setSelectedVoice(value);
-        saveSettings({ selectedVoice: value });
-    };*/
-
     return (
         <div className="settings min-h-screen flex flex-col">
             <Header
@@ -120,7 +113,7 @@ const Settings = ({ weatherData, notifications, setNotifications }) => {
             <DebugModal modalIsOpen={debugModalIsOpen} closeModal={() => setDebugModalIsOpen(false)} mode={'information'} headline={'Konsoleninhalt'} debugContent={debugContent}></DebugModal>
             <NotificationsModal modalIsOpen={notificationsModalIsOpen} closeModal={() => setNotificationsModalIsOpen(false)} notifications={notifications} setNotifications={setNotifications}></NotificationsModal>
             <InfoModal modalIsOpen={infoModalIsOpen} closeModal={() => setInfoModalIsOpen(false)} headline= {infoModalHeadline} content={infoModalContent}></InfoModal>
-            <div className="content flex-grow p-6 space-y-8 bg-white rounded-lg max-w-lg mx-auto">
+            <div className="content flex-grow p-5 space-y-8 bg-white rounded-lg max-w-lg">
 
                 {/* Distanz zu kühlen Orten */}
                 <div className="setting-item slidecontainer">

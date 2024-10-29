@@ -30,10 +30,10 @@
     "stopover": "Zwischenhalt",
     "information": {
       "coolPlaceDistance": "Diese Einstellung legt fest, wie weit von Ihrer Route entfernt kühle Orte berücksichtigt werden sollen. Kühle Orte sind beispielsweise schattige Plätze, Parks oder Orte mit erfrischendem Wasser. Je kürzer die eingestellte Distanz, desto näher an der Route werden kühle Orte gesucht und bevorzugt.",
-      "routePreference": "Mit der Routenpräferenz können Sie festlegen, ob die App kühlere oder schnellere Wege bevorzugen soll. Je höher der Prozentwert, desto größer ist die Gewichtung bei der Erstellung der Route.",
-      "notifications": "Ist diese Funktion aktiviert, werden Ihnen Push Benachrichtigungen über das System Ihres Geräts geschickt, sobald Sie sich in der Nähe eines kühlen Orts befinden.",
-      "contextInfo": "Wenn diese Option aktiviert ist, erhalten Sie zusätzliche Informationen, die auf Ihrem aktuellen Standort oder Ihrer Route basieren. Dazu gehören Hinweise auf Sehenswürdigkeiten, kühle Plätze oder Empfehlungen zur aktuellen Wetterlage in Ihrer Umgebung. Diese Funktion hilft Ihnen, besser informierte Entscheidungen während Ihrer Navigation zu treffen.",
-      "stopover": "Fügen Sie bei Bedarf einen Zwischenhalt bei einem kühlen- oder Trinkort in der Nähe Ihrer Route hinzu. Es wird automatisch der nächste passende Ort gefunden, der sich innerhalb Ihrer festgelegten maximalen Distanz befindet."
+      "routePreference": "Mit der Routenpräferenz kannst du festlegen, ob die App kühlere oder schnellere Wege bevorzugen soll. Je höher der Prozentwert, desto größer ist die Gewichtung bei der Erstellung der Route.",
+      "notifications": "Ist diese Funktion aktiviert, werden Ihnen Push Benachrichtigungen über das System Ihres Geräts geschickt, sobald du dich in der Nähe eines kühlen Orts befinden.",
+      "contextInfo": "Wenn diese Option aktiviert ist, erhältst du zusätzliche Informationen, die auf Ihrem aktuellen Standort oder Ihrer Route basieren. Dazu gehören Hinweise auf Sehenswürdigkeiten, kühle Plätze oder Empfehlungen zur aktuellen Wetterlage in Ihrer Umgebung. Diese Funktion hilft Ihnen, besser informierte Entscheidungen während Ihrer Navigation zu treffen.",
+      "stopover": "Füge bei Bedarf einen Zwischenhalt bei einem kühlen- oder Trinkort in der Nähe Ihrer Route hinzu. Es wird automatisch der nächste passende Ort gefunden, der sich innerhalb Ihrer festgelegten maximalen Distanz befindet."
     }
   },
   "footer": {
@@ -60,7 +60,13 @@
     "textareaPlaceholder": "Feedback geben..."
   },
   "locationModal": {
-    "hintRefillStation": "Diese Refillstation befindet sich in einem Gebäude. Informiere dich über die Öffnungszeiten, bevor du dich dorthin begibst."
+    "hint": "Hinweis",
+    "distance": "Distanz",
+    "openingHours": "Betriebszeiten",
+    "location": "Lage",
+    "link": "Link",
+    "startRoute": "Möchten Sie eine Route zu diesem Ort von Ihrer aktuellen Position starten?",
+    "hintInside": "Dieser Ort befindet sich innerhalb eines Gebäudes. Informiere dich über die aktuellen Öffnungszeiten, bevor du dich dorthin begibst."
   },
   "loading": {
     "weatherAlerts": "Lade Wetterwarnungen...",
@@ -69,7 +75,8 @@
     "coolPlaces": "Lade kühle Orte...",
     "drinkPlaces": "Lade Trinkplätze...",
     "route": "Lade Route...",
-    "waitingForPermission": "Warte auf Zugriffsberechtigung..."
+    "waitingForPermission": "Warte auf Zugriffsberechtigung...",
+    "location": "Lade aktuellen Standort..."
   },
   "weather": {
     "condition": "Wetterzustand",
@@ -77,7 +84,6 @@
     "windSpeed": "Windgeschwindigkeit",
     "humidity": "Luftfeuchtigkeit",
     "precipitationProbability": "Regenwahrscheinlichkeit",
-    "noData": "Keine Daten",
     "noDataAvailable": "Keine Wetterdaten verfügbar",
     "dry": "Trocken",
     "fog": "Nebel",
@@ -89,6 +95,7 @@
     "solarIrradiation": "Sonneneinstrahlung"
   },
   "general": {
+    "noData": "Keine Daten",
     "close": "Schließen",
     "abort": "Abbrechen",
     "start": "Start",

@@ -64,12 +64,13 @@ const getCoordinates = (entity) => {
                     lat: point.y,
                     lng: point.x,
                     bioclimateSituation: fromBioclimateSituation,
-                    color: fromColor
+                    color: fromColor,
+                    name: entity?.name
                 });
             });
         } else if (entity.attributes.position.PolygonType === 'Polygone') {
-            const fromX = entity.attributes.position.xCentral;
-            const fromY = entity.attributes.position.yCentral;
+            const fromX = entity.attributes.position.xStart;
+            const fromY = entity.attributes.position.yStart;
             const fromBounds = entity.attributes.position.PolygonPoints;
 
             coordinates.push({
@@ -77,11 +78,12 @@ const getCoordinates = (entity) => {
                 lng: fromX,
                 bioclimateSituation: fromBioclimateSituation,
                 color: '#2563eb',
+                name: entity?.name,
                 bounds: fromBounds
             });
         } else {
-            const x = entity.attributes.position.xCentral;
-            const y = entity.attributes.position.yCentral;
+            const x = entity.attributes.position.xStart;
+            const y = entity.attributes.position.yStart;
 
             coordinates.push({
                 lat: y,
@@ -95,6 +97,7 @@ const getCoordinates = (entity) => {
 }
 
 export const getAddresses = async () => {
+    // const preparedQueryUrl = 'http://localhost:8080/ContextServerAPI/predefined';
     const preparedQueryUrl = 'https://cs.climateapp.webtec.medien.hs-duesseldorf.de/contextserver/ContextServerAPI/predefined';
     const params = new URLSearchParams();
 
@@ -118,13 +121,10 @@ export const getAddresses = async () => {
 
         if (data.result && data.result.length > 0) {
             data.result.forEach((building) => {
-                const buildingType = building.attributes.typ;
-                if (buildingType === "public") {
-                    adresses.push({
-                        id: building.id,
-                        name: building.name
-                    })
-                }
+                adresses.push({
+                    id: building.id,
+                    name: building.name
+                })
             });
         }
     } catch (error) {
@@ -135,6 +135,7 @@ export const getAddresses = async () => {
 };
 
 export const getClimatePlaces = async (types) => {
+    // const preparedQueryUrl = 'http://localhost:8080/ContextServerAPI/predefined';
     const preparedQueryUrl = 'https://cs.climateapp.webtec.medien.hs-duesseldorf.de/contextserver/ContextServerAPI/predefined';
     const params = new URLSearchParams();
 
@@ -172,6 +173,7 @@ export const getClimatePlaces = async (types) => {
 };
 
 export const getRouteToCoolPlace = async (startPoint, endPoint) => {
+    // const preparedQueryUrl = 'http://localhost:8080/ContextServerAPI/predefined';
     const preparedQueryUrl = 'https://cs.climateapp.webtec.medien.hs-duesseldorf.de/contextserver/ContextServerAPI/predefined';
     const params = new URLSearchParams();
     let distance = 0.00252;
@@ -193,11 +195,12 @@ export const getRouteToCoolPlace = async (startPoint, endPoint) => {
         params.append('part_StartWay', JSON.stringify({name: startPoint}));
     }
 
+    // params.append('part_EndingCoolPlace', JSON.stringify({name: "Refillstation Rather Strasse"}));
     params.append('part_EndingCoolPlace', JSON.stringify({name: endPoint}));
 
-    params.append('param_breakAfterMS', '10000');
+    params.append('param_breakAfterMS', '30000');
     params.append('param_resultSize', '1');
-    params.append('param_maxOptSteps', '30');
+    params.append('param_maxOptSteps', '1');
     params.append('param_distance', distance.toString());
 
     const options = {
@@ -245,6 +248,7 @@ export const getRouteToCoolPlace = async (startPoint, endPoint) => {
 }
 
 export const checkPathsNearBy = async (longitude, latitude, distance = 0.00252) => {
+    // const preparedQueryUrl = 'http://localhost:8080/ContextServerAPI/predefined';
     const preparedQueryUrl = 'https://cs.climateapp.webtec.medien.hs-duesseldorf.de/contextserver/ContextServerAPI/predefined';
 
     const params = new URLSearchParams();
@@ -283,6 +287,7 @@ export const checkPathsNearBy = async (longitude, latitude, distance = 0.00252) 
 
 export const getRoute = async (routePreference, routeStartAddress, routeEndAddress, coolPlaceStopover) => {
     const savedSettings = JSON.parse(localStorage.getItem('userSettings'));
+    // const preparedQueryUrl = 'http://localhost:8080/ContextServerAPI/predefined';
     const preparedQueryUrl = 'https://cs.climateapp.webtec.medien.hs-duesseldorf.de/contextserver/ContextServerAPI/predefined';
 
     const routeLengthWeight = 100 - routePreference;
@@ -304,19 +309,21 @@ export const getRoute = async (routePreference, routeStartAddress, routeEndAddre
         params.append('situation', 'ClimateBestPathNearCoolAreas');
         params.append('query', 'ClimateBestPathNearCoolAreas');
         params.append('part_StartingBuilding', JSON.stringify({name: routeStartAddress}));
+        // params.append('part_StartingBuilding', JSON.stringify({id: 101058664432927658}));
     }
 
     params.append('part_EndingBuilding', JSON.stringify({name: routeEndAddress}));
+    // params.append('part_EndingBuilding', JSON.stringify({id: 101058664432927882}));
     params.append('part_CoolPlaces', '');
     params.append('param_routeLengthWeight', routeLengthWeight.toString());
     params.append('param_bioclimateWeigth', bioclimateWeight.toString());
-    params.append('param_coolPlaceMinDistanceWeight', '10');
+    params.append('param_coolPlaceMinDistanceWeight', '30');
     params.append('param_coolPlaceAvgDistanceWeight', '10');
     params.append('param_coolPlaceMaxDistanceWeight', '10');
     params.append('param_coolPlaceMaxDistance', savedSettings?.coolPlaceDistance ?? '100');
-    params.append('param_maxDerivationRouteLength', '1.2');
+    params.append('param_maxDerivationRouteLength', '0.7');
     params.append('param_maxDerivationBioclimate', '');
-    params.append('param_breakAfterMS', '10000');
+    params.append('param_breakAfterMS', '30000');
     params.append('param_resultSize', '1');
     params.append('param_maxOptSteps', '30');
     params.append('param_distance', distance.toString());
@@ -376,8 +383,15 @@ export const getRoute = async (routePreference, routeStartAddress, routeEndAddre
                 coolPlaceIsNear = true;
 
                 const coolPlaceRouteObj = await getRouteToCoolPlace(wayToCoolPlace, coolPlaceName);
-                if (coolPlaceRouteObj && coolPlaceRouteObj.route)
-                    bigRoute = bigRoute.concat(coolPlaceRouteObj.route);
+                if (coolPlaceRouteObj && coolPlaceRouteObj.route) {
+                    // Berechne die Mitte des bigRoute Arrays
+                    const middleIndex = Math.floor(bigRoute.length / 2);
+
+                    // Füge coolPlaceRouteObj.route in der Mitte von bigRoute ein
+                    bigRoute.splice(middleIndex, 0, ...coolPlaceRouteObj.route);
+                    // bigRoute = bigRoute.concat(coolPlaceRouteObj.route);
+
+                }
             }
         }
     } catch (error) {

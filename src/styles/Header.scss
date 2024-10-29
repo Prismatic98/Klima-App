@@ -9,6 +9,11 @@ header {
     background-color: $primary-color;
     color: white;
     z-index: 1010;
+
+    h1 {
+        font-size: $font-size-md;
+        line-height: 2rem;
+    }
 }
 
 .notifications-count {

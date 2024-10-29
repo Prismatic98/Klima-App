@@ -18,7 +18,7 @@ const getConditionTranslation = (condition, t) => {
         "snow": t('weather.snow'),
         "hail": t('weather.hail'),
         "thunderstorm": t('weather.thunderstorm'),
-        "default": t('weather.noData')
+        "default": t('general.noData')
     };
     return conditionTranslations[condition] || conditionTranslations["default"];
 };
@@ -37,47 +37,46 @@ const WeatherDataModal = ({ modalIsOpen, closeModal, headline, weatherData }) =>
                 </div>
                 <div className="modal__content">
                     <div className="modal__text">
-                        {/* Wetterdaten in einer übersichtlichen Struktur */}
                         {weatherData ? (
                             <div className="weather-info">
                                 <div className="weather-info__item">
                                     <BsCloudFill className="icon icon--gray" />
-                                    <span>{t('weather.condition')}: {weatherData.condition ? getConditionTranslation(weatherData.condition, t) : t('weather.noData')}</span>
+                                    <span>{t('weather.condition')}: {weatherData.condition ? getConditionTranslation(weatherData.condition, t) : t('general.noData')}</span>
                                 </div>
 
                                 {/* Temperatur */}
                                 <div className="weather-info__item">
                                     <MdDeviceThermostat className="icon icon--gray" />
-                                    <span>{t('weather.temperature')}: {weatherData.temperature !== null ? `${Math.round(weatherData.temperature).toString()}°C` : t('weather.noData')}</span>
+                                    <span>{t('weather.temperature')}: {weatherData.temperature !== null ? `${Math.round(weatherData.temperature).toString()}°C` : t('general.noData')}</span>
                                 </div>
 
                                 {/* Windgeschwindigkeit */}
                                 <div className="weather-info__item">
                                     <MdAir className="icon icon--gray" />
-                                    <span>{t('weather.windSpeed')}: {weatherData.wind_speed !== null ? `${weatherData.wind_speed} km/h` : t('weather.noData')}</span>
+                                    <span>{t('weather.windSpeed')}: {weatherData.wind_speed !== null ? `${weatherData.wind_speed} km/h` : t('general.noData')}</span>
                                 </div>
 
                                 {/* Luftfeuchtigkeit */}
                                 <div className="weather-info__item">
                                     <MdWaterDrop className="icon icon--gray" />
-                                    <span>{t('weather.humidity')}: {weatherData.relative_humidity !== null ? `${weatherData.relative_humidity}%` : t('weather.noData')}</span>
+                                    <span>{t('weather.humidity')}: {weatherData.relative_humidity !== null ? `${weatherData.relative_humidity}%` : t('general.noData')}</span>
                                 </div>
 
                                 {/* Niederschlag */}
                                 <div className="weather-info__item">
                                     <MdOutlineBeachAccess className="icon icon--gray" />
-                                    <span>{t('weather.precipitationProbability')}: {weatherData.precipitation_probability !== null ? `${weatherData.precipitation_probability}%` : t('weather.noData')}</span>
+                                    <span>{t('weather.precipitationProbability')}: {weatherData.precipitation_probability !== null ? `${weatherData.precipitation_probability}%` : t('general.noData')}</span>
                                 </div>
 
                                 {/* Sonneneinstrahlung */}
                                 <div className="weather-info__item">
                                     <MdSunny className="icon icon--gray" />
-                                    <span>{t('weather.solarIrradiation')}: {weatherData.solar !== null ? `${weatherData.solar} kWh/m²` : t('weather.noData')}</span>
+                                    <span>{t('weather.solarIrradiation')}: {weatherData.solar !== null ? `${weatherData.solar} kWh/m²` : t('general.noData')}</span>
                                 </div>
                             </div>
                         ) : (
                             <div className="weather-info__no-data">
-                                {t('weather.noDataAvailable')}
+                                {t('general.noDataAvailable')}
                             </div>
                         )}
                     </div>

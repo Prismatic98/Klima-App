@@ -1,8 +1,7 @@
 import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {MdClose, MdRoute, MdMyLocation, MdSwapVert, MdLocationOn, MdInfo} from "react-icons/md";
-import Loading from "./Loading";
-import InfoModal from "./InfoModal"; // MdClose für das Kreuz, MdSwapVert für das Tausch-Icon
+import InfoModal from "./InfoModal";
 
 const RouteModal = ({
                         showModal,
@@ -40,7 +39,7 @@ const RouteModal = ({
         setRouteEndAddress(temp);
     };*/
 
-    if (!showModal) return null; // Render nothing if modal is not visible
+    if (!showModal) return null;
 
     const openInfoModal = (topic) => {
         let content = '';
@@ -206,6 +205,8 @@ const RouteModal = ({
                             <span className="text-sm text-gray-600">{100 - routePreference}%</span>
                             <span className="text-sm text-gray-600">{routePreference}%</span>
                         </div>
+                    </div>
+                    <div className="settings-item">
                         <div className="settings__label-wrapper mt-2">
                             <label
                                 className="settings__label"
@@ -252,7 +253,6 @@ const RouteModal = ({
                                 <span className="toggle round"></span>
                             </label>
                         </div>
-
                     </div>
 
                     {/* Modal Footer */}

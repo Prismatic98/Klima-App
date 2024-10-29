@@ -60,7 +60,13 @@
     "textareaPlaceholder": "Give feedback..."
   },
   "locationModal": {
-    "hintRefillStation": "This refill station is located in a building. Check the opening hours before going there."
+    "hint": "Hint",
+    "distance": "Distance",
+    "openingHours": "Opening hours",
+    "location": "Location",
+    "link": "Link",
+    "startRoute": "Would you like to start a route to this location from your current position?",
+    "hintInside": "This place is located inside a building. Check the current opening hours before going there."
   },
   "loading": {
     "weatherAlerts": "Loading weather alerts...",
@@ -69,7 +75,8 @@
     "coolPlaces": "Loading cool places...",
     "drinkPlaces": "Loading dring places...",
     "route": "Loading route...",
-    "waitingForPermission": "Waiting for Access Permission..."
+    "waitingForPermission": "Waiting for Access Permission...",
+    "location": "Loading current location..."
   },
   "weather": {
     "condition": "Weather condition",
@@ -77,7 +84,6 @@
     "windSpeed": "Wind Speed",
     "humidity": "Humidity",
     "precipitationProbability": "Precipitation Probability",
-    "noData": "No data",
     "noDataAvailable": "No weather data available",
     "dry": "Dry",
     "fog": "Fog",
@@ -89,6 +95,7 @@
     "solarIrradiation": "Solar irradiation"
   },
   "general": {
+    "noData": "No data",
     "close": "Close",
     "abort": "Abort",
     "start": "Start",
