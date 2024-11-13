@@ -57,14 +57,15 @@ const Map = ({
                  setLocationModalIsOpen,
                  locationNear,
                  openLocationModal,
-                 setNotificationsModal
+                 setNotificationsModal,
+                hasFitBounds,
+                setHasFitBounds
              }) => {
     const {t} = useTranslation();
     const [heading, setHeading] = useState(0); // Blickrichtung
     const headingHistory = useRef([]); // Array zur Speicherung der letzten Kompasswerte
     const [useCompass, setUseCompass] = useState(false); // Zustand für die Nutzung der Compass-Daten
     const [isMapCentered, setIsMapCentered] = useState(false);
-    const [hasFitBounds, setHasFitBounds] = useState(false); // Zustand, um zu prüfen, ob fitBounds bereits ausgeführt wurde
 
     const currentLocationIconSVG = `
     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="#007bff" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-navigation">
@@ -187,7 +188,7 @@ const Map = ({
         setLoadingMessage(t('loading.route'));
         setRouteStartAddress(`${currentPosition.lat}, ${currentPosition.lng}`);
         setRouteEndAddress(locationNear.name);
-        const routeObject = await getRouteToCoolPlace(currentPosition, locationNear.name);
+        const routeObject = await getRouteToCoolPlace(currentPosition, locationNear.name, 'line');
         console.log(routeObject);
         setIsLoading(false);
         setRoute(routeObject.route);
@@ -326,24 +327,53 @@ const Map = ({
                     <RouteInfoContainer/>
                 )}
 
-
-                {/* Schleife durch die Segmente in der Route */}
                 {route.length > 0 && route.map((segment, segmentIndex) => (
                     <React.Fragment key={segmentIndex}>
                         {segment.length > 0 && (
                             <Polyline
                                 positions={segment.map(point => [point.lat, point.lng])}
-                                color={segment[0].color}
+                                color="#2563eb" // Weiche Standardfarbe (hellblau)
+                                weight={10}
+                                opacity={1}
+                                lineCap="round"
+                            />
+                        )}
+                    </React.Fragment>
+                ))}
+
+                {route.length > 0 && route.map((segment, segmentIndex) => (
+                    <React.Fragment key={segmentIndex}>
+                        {segment.length > 0 && (
+                            <Polyline
+                                positions={segment.map(point => [point.lat, point.lng])}
+                                color={segment[0].color || "#2563eb"} // Weiche Standardfarbe (hellblau)
                                 weight={6}
                                 opacity={1}
                                 lineCap="round"
+                                dashArray={segment[0].lineStroke === 'dash' ? "1, 10" : null}
                                 eventHandlers={{
                                     click: (e) => {
-                                        const map = e.target._map; // Zugriff auf die Leaflet-Karte
+                                        const map = e.target._map;
                                         const popup = L.popup()
-                                            .setLatLng(e.latlng) // Die Position des Klicks
-                                            .setContent(segment[0].name?.split('_')[0]) // Inhalt des Popups
-                                            .openOn(map); // Öffnet das Popup auf der Karte
+                                            .setLatLng(e.latlng)
+                                            .setContent(`
+                                <div style="text-align: center;">
+                                    <strong>${segment[0].name?.split('_')[0]}</strong>
+                                </div>
+                            `)
+                                            .openOn(map);
+                                    },
+                                    mouseover: (e) => {
+                                        e.target.setStyle({
+                                            color: "#2980b9",
+                                            weight: 7,
+                                        });
+                                    },
+                                    mouseout: (e) => {
+                                        e.target.setStyle({
+                                            color: segment[0].color || "#2563eb",
+                                            weight: 6,
+                                        });
                                     }
                                 }}
                             />
@@ -352,12 +382,13 @@ const Map = ({
                         {segment[0].bounds && (
                             <Polygon
                                 positions={segment[0].bounds.map(point => [point.y, point.x])}
-                                color={segment[0].color}
-                                fillOpacity={0.3}
+                                color={segment[0].color || "#2563eb"}
+                                fillOpacity={0.2}
                             />
                         )}
                     </React.Fragment>
                 ))}
+
 
                 {/* Markierungen für Start- und Endpunkt */}
                 {route.length > 0 && (

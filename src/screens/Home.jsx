@@ -25,6 +25,7 @@ const Home = ({warnings, addresses, coolPlaces, drinkPlaces, isLoading, setIsLoa
     const [locationModalIsOpen, setLocationModalIsOpen] = useState(false);
     const [locationNear, setLocationNear] = useState(null);
     const [currentPosition, setCurrentPosition] = useState(null);
+    const [hasFitBounds, setHasFitBounds] = useState(false);
 
     const openLocationModal = (place, placeType, distance) => {
         if (!distance)
@@ -162,6 +163,7 @@ const Home = ({warnings, addresses, coolPlaces, drinkPlaces, isLoading, setIsLoa
                     notifications={notifications} setNotifications={setNotifications}
                     locationModalIsOpen={locationModalIsOpen} setLocationModalIsOpen={setLocationModalIsOpen}
                     locationNear={locationNear} openLocationModal={openLocationModal} setNotificationsModal={setNotificationsModalIsOpen}
+                    hasFitBounds={hasFitBounds} setHasFitBounds={setHasFitBounds}
                 />
             </div>
             <Footer route={route}
@@ -176,6 +178,7 @@ const Home = ({warnings, addresses, coolPlaces, drinkPlaces, isLoading, setIsLoa
                     currentPosition={currentPosition}
                     isLoading={isLoading} setIsLoading={setIsLoading}
                     loadingMessage={loadingMessage} setLoadingMessage={setLoadingMessage}
+                    setHasFitBounds={setHasFitBounds}
             />
             <Loading message={loadingMessage} isLoading={isLoading}/>
         </div>

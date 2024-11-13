@@ -1,5 +1,5 @@
 import React from 'react';
-import {MdError, MdLocationOn, MdOutlineAcUnit, MdOutlineWaterDrop} from 'react-icons/md';
+import {MdError, MdLocationOn, MdOutlineAcUnit, MdOutlineWaterDrop, MdOpenInNew } from 'react-icons/md';
 import {useTranslation} from "react-i18next";
 
 const LocationModal = ({modalIsOpen, closeModal, onRouteStart, location}) => {
@@ -33,9 +33,10 @@ const LocationModal = ({modalIsOpen, closeModal, onRouteStart, location}) => {
                         <p>{location.description} <span className="font-bold">{location.specificType}</span></p>
                         <div className="location__info py-2">
                             <p className="">{t('locationModal.openingHours')}: <span className="font-bold">{location.attributes.betriebszeiten === "null" || location.attributes.betriebszeiten === " " ? t('general.noData') : location.attributes.betriebszeiten}</span></p>
-                            <p className="">{t('locationModal.location')}: <span className="font-bold">{location.attributes.lage}</span></p>
                             {location.attributes.infolink !== "null" && (
-                                <p className="">{t('locationModal.link')}: <span className="font-bold">{location.attributes.infolink}</span></p>
+                                <p className="flex items-center gap-x-1">{t('locationModal.link')}: <a href={location.attributes.infolink} target="_blank" rel="noreferrer" className="font-bold flex items-center gap-x-1 text-blue-500">
+                                    {location.attributes.infolink} <MdOpenInNew />
+                                </a></p>
                             )}
                             <p className="">{t('locationModal.distance')}: <span className="font-bold">~{location.distance}m</span></p>
                         </div>

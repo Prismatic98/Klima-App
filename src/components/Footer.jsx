@@ -17,7 +17,7 @@ import {useTranslation} from "react-i18next";
 
 const Footer = ({
                     route, setRoute, setRouteLength, setRouteDuration, routeStartAddress, setRouteStartAddress, routeEndAddress, setRouteEndAddress,
-                    addresses, currentPosition, isLoading, setIsLoading, loadingMessage, setLoadingMessage
+                    addresses, currentPosition, isLoading, setIsLoading, loadingMessage, setLoadingMessage, setHasFitBounds
                 }) => {  // setRoute wird als Prop empfangen
     const {t} = useTranslation();
     const savedSettings = JSON.parse(localStorage.getItem('userSettings'));
@@ -27,7 +27,7 @@ const Footer = ({
     const [isSearchActive, setIsSearchActive] = useState(false);
     const [showButtons, setShowButtons] = useState(false);
     const [showRouteModal, setShowRouteModal] = useState(false);
-    const [stopover, setStopover] = useState('');
+    const [stopover, setStopover] = useState(null);
     const [showFeedbackForm, setShowFeedbackForm] = useState(false);
     const [startAddressSuggestions, setStartAddressSuggestions] = useState([]);
     const [endAddressSuggestions, setEndAddressSuggestions] = useState([]);
@@ -159,7 +159,10 @@ const Footer = ({
                 {location.pathname === '/' && (
                     <div className="footer__item footer__item--primary">
                         {route.length > 0 ? (
-                            <button className="button__dot button__dot--big bg-rose-600" onClick={() => setRoute([])}>
+                            <button className="button__dot button__dot--big bg-rose-600" onClick={() => {
+                                setHasFitBounds(false);
+                                setRoute([]);
+                            }}>
                                 <div className="icon-wrapper">
                                     <MdClose className="icon icon--medium" />
                                 </div>

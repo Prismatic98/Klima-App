@@ -229,7 +229,7 @@ const RouteModal = ({
                                     id="drinkPlaceStop"
                                     type="checkbox"
                                     checked={stopover === 'Refillstation, Trinkbrunnen'}
-                                    onChange={() => stopover === 'Refillstation, Trinkbrunnen' ? setStopover('') : setStopover('Refillstation, Trinkbrunnen')}
+                                    onChange={() => stopover === 'Refillstation, Trinkbrunnen' ? setStopover(null) : setStopover('Refillstation, Trinkbrunnen')}
                                 />
                                 <span className="toggle round"></span>
                             </label>
@@ -248,7 +248,7 @@ const RouteModal = ({
                                     id="coolPlaceStop"
                                     type="checkbox"
                                     checked={stopover === 'Wasserspielplatz'}
-                                    onChange={() => stopover === 'Wasserspielplatz' ? setStopover('') : setStopover('Wasserspielplatz')}
+                                    onChange={() => stopover === 'Wasserspielplatz' ? setStopover(null) : setStopover('Wasserspielplatz')}
                                 />
                                 <span className="toggle round"></span>
                             </label>
